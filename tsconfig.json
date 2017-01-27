@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "es2015", "es2015", "es2015.promise"],
+    "sourceMap": false,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "moduleResolution": "node",
+    "target": "es6",
+    "module": "es6",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
