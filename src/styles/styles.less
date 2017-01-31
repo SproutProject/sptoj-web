@@ -1,0 +1,139 @@
+@import "gridlex.less";
+
+* {
+  // Set default styles.
+  box-sizing: border-box;
+  border: none;
+  text-decoration: none;
+  position: relative;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+body {
+  overflow-y: scroll;
+}
+
+a {
+  color: black;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+button {
+  height: 2rem;
+  line-height: 2rem;
+  background: transparent;
+  cursor: pointer;
+
+  &:before {
+    content: "";
+    height: 1px;
+    width: 100%;
+    background-color: black;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+  }
+  
+  &:after {
+    content: "";
+    height: 100%;
+    width: 100%;
+    background-color: lightgray;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -2;
+  }
+
+  &:hover:before {
+    height: 100%;
+    transition: height 0.05s linear;
+  }
+}
+
+div.container {
+  max-width: 80em;
+  margin: 0 auto;
+}
+
+div.form-input {
+  height: 2rem;
+  line-height: 2rem;
+  
+  > label {
+    height: 2rem;
+    padding-left: 0.5rem;
+    border-bottom: solid 1px black;
+  }
+
+  > div.input {
+    > input {
+      height: 2rem;
+      width: 100%;
+      padding-left: 0.5rem;
+      background: transparent;
+      border-bottom: solid 1px lightgray;
+      display: block;
+    }
+  }
+}
+
+#navbar {
+  height: 2rem;
+  line-height: 2rem;
+  width: 100%;
+  background-color: white;
+  border-bottom: solid 1px lightgray;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  a.logo {
+    height: 2rem;
+  }
+
+  a.link {
+    height: 2rem;
+    color: black;
+    text-align: center;
+
+    &:before {
+      content: "";
+      height: 1px;
+      width: 100%;
+      background-color: black;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    &:hover {
+      text-decoration: none;
+
+      &:before {
+        height: 5px;
+        bottom: -4px;
+      }
+    }
+
+    &.router-link-active {
+      &:before {
+        height: ~"calc(100% + 5px)";
+        bottom: -4px;
+        transition: height 0.05s linear;
+      }
+    }
+  }
+}
+
+#view {
+  margin-top: 4rem;
+}

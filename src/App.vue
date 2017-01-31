@@ -1,66 +1,24 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://gitter.im/vuejs/vue" target="_blank">Gitter Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+<div id="app">
+  <div id="navbar">
+    <div class="container"><div class="grid grid-noBottom">
+      <router-link to="/" class="col-2 logo">Sprout OJ</router-link>
+      <router-link to="/info" class="col link">消息</router-link>
+      <router-link to="/status" class="col link">狀態</router-link>
+      <router-link to="/task" class="col link">任務</router-link>
+      <router-link to="/ingress" class="col link" data-push-left="off-4">登入 | 註冊</router-link>
+    </div></div>
   </div>
+  <div id="view"  class="container">
+    <router-view></router-view>
+  </div>
+</div>
 </template>
 
 <script lang="ts">
-import * as Vue from 'vue';
+import * as Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
 @Component
-export default class App extends Vue {
-  data(): Object {
-    return {
-      msg: 'Welcome to Your Vue.js App'
-    }
-  }
-}
+export default class App extends Vue {}
 </script>
-
-<style lang="less">
-@font-color: #2c3e50;
-@link-color: #42b983;
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: @font-color;
-  margin-top: 60px;
-}
-
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: @link-color;
-}
-</style>
