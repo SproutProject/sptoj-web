@@ -1,11 +1,14 @@
 import './styles/styles.less'
+require("babel-core/register");
+require("babel-polyfill");
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import FormInput from './components/FormInput.vue'
+import * as API from './API.ts'
+import * as UserService from './UserService.ts'
 import App from './App.vue'
 import Index from './Index.vue'
-import Task from './Task.vue'
 import Ingress from './Ingress.vue'
-import FormInput from './components/FormInput.vue'
 
 Vue.use(VueRouter)
 
@@ -15,15 +18,20 @@ const router = new VueRouter({
     { path: '/', component: Index },
     { path: '/info', component: Index },
     { path: '/status', component: Index },
-    { path: '/task', component: Task },
     { path: '/ingress', component: Ingress }
   ]
 })
 
 Vue.component('form-input', FormInput)
 
-new Vue({
-  el: '#app',
-  render: h => h(App),
-  router
+API.emit('/user/get').then(user => {
+  if (user != 'Error') {
+    UserService.initialize(user);
+  }
+
+  new Vue({
+    el: '#app',
+    render: h => h(App),
+    router
+  })
 })
