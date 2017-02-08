@@ -27,7 +27,7 @@ module.exports = {
       },
       {
         test: /\.ts$/,
-        loader: 'babel-loader!ts-loader',
+        loader: 'babel-loader!ts-loader?appendTsSuffixTo[]=\\.vue$',
       },
       {
         test: /\.less$/,
