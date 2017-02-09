@@ -1,10 +1,18 @@
-interface User {
-  uid: number,
-  name: string
+export enum UserLevel {
+  user = 3,
+  kernel = 0,
 }
 
-export let self: null | User = null
+export interface User {
+  uid: number,
+  name: string,
+  level: UserLevel,
+}
+
+export let login: boolean = false
+export let identity: User = { uid: -1, name: '', level: -1 }
 
 export function initialize(user: User) {
-  self = user;
+  login = true
+  identity = user
 }

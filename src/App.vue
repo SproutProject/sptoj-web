@@ -20,18 +20,11 @@
 <script lang="ts">
 import * as Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import * as UserService from './user-service.ts'
+import * as UserSrv from './user-service.ts'
 
 @Component
 export default class App extends Vue {
-  login: boolean = UserService.self !== null;
-
-  get name(): string {
-    if (UserService.self === null) {
-      return ''
-    } else {
-      return UserService.self.name
-    }
-  }
+  login: boolean = UserSrv.login
+  name: string = UserSrv.identity.name
 }
 </script>
