@@ -1,9 +1,27 @@
 import axios from 'axios';
 
+export interface Problem {
+  uid: number
+  revision: string
+  name: string
+  timelimit: number
+  memlimit: number
+  lang: string
+  checker: string
+  scoring: string
+  subtask: number[]
+}
+
+export interface ProItem {
+  uid: number
+  hidden: boolean
+  problem: Problem
+}
+
 export interface ProSet {
-  uid: number,
-  name: string,
-  hidden: boolean,
+  uid: number
+  name: string
+  hidden: boolean
 }
 
 export async function emit<T>(path: string, data = {}): Promise<T> {
@@ -30,4 +48,22 @@ export async function setProSet(proset: ProSet): Promise<'Error' | 'Success'> {
     name: proset.name,
     hidden: proset.hidden,
   })
+}
+
+export async function addProItem(proset: ProSet, problem: Problem): Promise<'Error' | number> {
+  return await emit<'Error' | number>(`/proset/${proset.uid}/add`, {
+    problem_uid: problem.uid,
+  })
+}
+
+export async function listProItem(proset: ProSet): Promise<'Error' | ProItem[]> {
+  return await emit<'Error' | ProItem[]>(`/proset/${proset.uid}/list`, {})
+}
+
+export async function updateProblem(): Promise<'Error' | 'Success'> {
+  return await emit<'Error' | 'Success'>(`/problem/update`, {})
+}
+
+export async function listProblem(): Promise<'Error' | Problem[]> {
+  return await emit<'Error' | Problem[]>(`/problem/list`, {})
 }

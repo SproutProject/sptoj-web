@@ -14,6 +14,7 @@ import GroupBoard from './GroupBoard.vue'
 import Profile from './Profile.vue'
 import Manage from './Manage.vue'
 import GroupManage from './GroupManage.vue'
+import ProblemManage from './ProblemManage.vue'
 
 Vue.use(VueRouter)
 
@@ -32,6 +33,7 @@ const router = new VueRouter({
       children: [
         { path: 'group', component: GroupManage },
         { path: 'group/:proset_uid', component: GroupManage },
+        { path: 'problem', component: ProblemManage },
       ]
     },
   ]
