@@ -24,9 +24,3 @@ export default class Profile extends Vue {
 }
 
 </script>
-
-<style lang="less">
-#menu {
-  
-}
-</style>

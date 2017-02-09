@@ -11,6 +11,7 @@ import App from './App.vue'
 import Index from './Index.vue'
 import Ingress from './Ingress.vue'
 import GroupBoard from './GroupBoard.vue'
+import Group from './Group.vue'
 import Profile from './Profile.vue'
 import Manage from './Manage.vue'
 import GroupManage from './GroupManage.vue'
@@ -25,7 +26,13 @@ const router = new VueRouter({
     { path: '/info', component: Index },
     { path: '/status', component: Index },
     { path: '/ingress', component: Ingress },
-    { path: '/groups', component: GroupBoard },
+    {
+      path: '/group',
+      component: GroupBoard,
+      children: [
+        { path: ':proset_uid', component: Group },
+      ],
+    },
     { path: '/profile', component: Profile },
     {
       path: '/manage',
@@ -34,7 +41,7 @@ const router = new VueRouter({
         { path: 'group', component: GroupManage },
         { path: 'group/:proset_uid', component: GroupManage },
         { path: 'problem', component: ProblemManage },
-      ]
+      ],
     },
   ]
 })

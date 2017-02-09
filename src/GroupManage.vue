@@ -61,16 +61,9 @@ export default class GroupManage extends Vue {
   selected_problem: API.Problem | null = null
 
   async beforeRouteEnter(to: Route, from: Route, next: Function) {
-    let result = await API.listProSet()
-    if (result !== 'Error') {
-      let prosets = result
-      next((vm: GroupManage) => {
-        vm.prosets = prosets
-        vm.onChangeProSet.bind(vm)()
-      })
-    } else {
-      next(false)
-    }
+    next((vm: GroupManage) => {
+      vm.onChangeProSet.bind(vm)()
+    })
   }
 
   @Watch('$route')
