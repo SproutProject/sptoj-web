@@ -56,8 +56,12 @@ export async function addProItem(proset: ProSet, problem: Problem): Promise<'Err
   })
 }
 
-export async function listProItem(proset: ProSet): Promise<'Error' | ProItem[]> {
-  return await emit<'Error' | ProItem[]>(`/proset/${proset.uid}/list`, {})
+export async function getProItem(proset_uid: number, proitem_uid: number): Promise<'Error' | ProItem> {
+  return await emit<'Error' | ProItem>(`/proset/${proset_uid}/${proitem_uid}/get`, {})
+}
+
+export async function listProItem(proset_uid: number): Promise<'Error' | ProItem[]> {
+  return await emit<'Error' | ProItem[]>(`/proset/${proset_uid}/list`, {})
 }
 
 export async function updateProblem(): Promise<'Error' | 'Success'> {

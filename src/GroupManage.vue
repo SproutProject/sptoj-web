@@ -78,7 +78,7 @@ export default class GroupManage extends Vue {
       let result = await API.getProSet(proset_uid)
       if (result !== 'Error') {
         this.current_proset = result
-        let proitems = await API.listProItem(result)
+        let proitems = await API.listProItem(proset_uid)
         if (proitems !== 'Error') {
           this.current_proitems = proitems
         }
