@@ -28,7 +28,7 @@
       </div>
     </div>
   </div></div>
-  <iframe class="col" id="content" :src="`/api/proset/${$route.params.proset_uid}/${$route.params.proset_uid}/static/cont.html`"/>
+  <iframe class="col" id="content" :src="`/api/proset/${$route.params.proset_uid}/${$route.params.proset_uid}/static/`"/>
 </div>
 </template>
 
