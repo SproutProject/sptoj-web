@@ -2,7 +2,7 @@
 <div id="group" class="grid">
   <div v-for="proitem in proitems" class="col-12"><div class="grid grid-noGutter">
     <div class="col-1">{{ proitem.problem.uid }}</div>
-    <router-link :to="`/problem/${proset.uid}/${proitem.uid}`" class="col">{{ proitem.problem.name }}</router-link>
+    <router-link :to="`/problem/${proset.uid}/${proitem.uid}/`" class="col">{{ proitem.problem.name }}</router-link>
   </div></div>
 </div>
 </template>

@@ -1,10 +1,34 @@
 <template>
 <div id="problem" class="grid" v-if="proitem !== null">
-  <div class="col-2">
-    <div id="title">{{ proitem.problem.uid }} - {{ proitem.problem.name }}</div>
-  </div>
-  <div class="col">
-  </div>
+  <div class="col-2"><div class="grid">
+    <div id="title" class="col-12">{{ proitem.problem.uid }} - {{ proitem.problem.name }}</div>
+    <div class="col-12"><button>Submit</button></div>
+    <div id="information" class="col-12">
+      <div class="grid">
+        <div class="col">Languages</div>
+        <div class="col">{{ proitem.problem.lang }}</div>
+      </div>
+      <div class="grid">
+        <div class="col">Timelimit</div>
+        <div class="col">{{ proitem.problem.timelimit }}</div>
+      </div>
+      <div class="grid">
+        <div class="col">Memlimit</div>
+        <div class="col">{{ proitem.problem.memlimit }}</div>
+      </div>
+    </div>
+    <div id="subtask" class="col-12">
+      <div class="grid head">
+        <div class="col">Subtask</div>
+        <div class="col">Ratio</div>
+      </div>
+      <div v-for="(ratio, index) in proitem.problem.subtask" class="grid">
+        <div class="col">{{ index + 1 }}</div>
+        <div class="col">{{ ratio }}</div>
+      </div>
+    </div>
+  </div></div>
+  <iframe class="col" id="content" :src="`/api/proset/${$route.params.proset_uid}/${$route.params.proset_uid}/static/cont.html`"/>
 </div>
 </template>
 

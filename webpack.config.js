@@ -56,8 +56,7 @@ module.exports = {
     noInfo: true,
     proxy: {
       '/api': {
-        target: 'http://188.166.236.255:6000',
-        pathRewrite: {'^/api': ''}
+        target: 'http://188.166.236.255'
       }
     }
   },
