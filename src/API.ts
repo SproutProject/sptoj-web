@@ -50,6 +50,10 @@ export async function setProSet(proset: ProSet): Promise<'Error' | 'Success'> {
   })
 }
 
+export async function removeProSet(proset_uid: number): Promise<'Error' | 'Success'> {
+  return await emit<'Error' | 'Success'>(`/proset/${proset_uid}/remove`, {})
+}
+
 export async function addProItem(proset: ProSet, problem: Problem): Promise<'Error' | number> {
   return await emit<'Error' | number>(`/proset/${proset.uid}/add`, {
     problem_uid: problem.uid,
@@ -60,8 +64,23 @@ export async function getProItem(proset_uid: number, proitem_uid: number): Promi
   return await emit<'Error' | ProItem>(`/proset/${proset_uid}/${proitem_uid}/get`, {})
 }
 
+export async function setProItem(proset_uid: number, proitem: ProItem): Promise<'Error' | 'Success'> {
+  return await emit<'Error' | 'Success'>(`/proset/${proset_uid}/${proitem.uid}/set`, proitem)
+}
+
+export async function removeProItem(proset_uid: number, proitem_uid: number): Promise<'Error' | 'Success'> {
+  return await emit<'Error' | 'Success'>(`/proset/${proset_uid}/${proitem_uid}/remove`, {})
+}
+
 export async function listProItem(proset_uid: number): Promise<'Error' | ProItem[]> {
   return await emit<'Error' | ProItem[]>(`/proset/${proset_uid}/list`, {})
+}
+
+export async function submit(proset_uid: number, proitem_uid: number, code: string, lang: string): Promise<'Error' | number> {
+  return await emit<'Error' | number>(`/proset/${proset_uid}/${proitem_uid}/submit`, {
+    code,
+    lang,
+  })
 }
 
 export async function updateProblem(): Promise<'Error' | 'Success'> {

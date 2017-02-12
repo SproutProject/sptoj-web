@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="grid grid-noGutter form-input">
+    <div class="grid form-input">
       <slot></slot>
       <div class="col input"><input :type="type" :value="value" :placeholder="placeholder" :required="required" @input="updateValue($event.target.value)"></slot></div>
     </div>

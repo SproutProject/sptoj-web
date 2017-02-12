@@ -4,24 +4,24 @@
   <div class="col-4"><form class="grid-1" @submit.prevent="onSubmit">
     <!-- Login -->
     <form-input class="col" type="email" required v-model="mail">
-      <label class="col-3">信箱</label>
+      <form-label class="col-3">Mail</form-label>
     </form-input>
     <form-input class="col" type="password" required v-model="password">
-      <label class="col-3">密碼</label>
+      <form-label class="col-3">Password</form-label>
     </form-input>
     <!-- Register -->
     <form-input  class="col" type="password" required v-if="mode == 'register'" v-model="confirm">
-      <label class="col-3">確認密碼</label>
+      <form-label class="col-3">Confirm</form-label>
     </form-input>
     <form-input  class="col" type="text" required v-if="mode == 'register'" v-model="name">
-      <label class="col-3">名稱</label>
+      <form-label class="col-3">Name</form-label>
     </form-input>
     <!-- Buttons -->
-    <div class="col"><div class="grid grid-noGutter">
-      <button class="col-3" v-show="mode == 'login'" @click.prevent="onSubmit">登入</button>
-      <button class="col-3" @click.prevent="onRegister">註冊</button>
-      <button class="col-3" v-show="mode == 'register'" @click.prevent="onCancel">取消</button>
-      <span class="col form-message">{{ message }}</span>
+    <div class="col"><div class="grid">
+      <div class="col-3" v-show="mode == 'login'"><button @click.prevent="onSubmit">Login</button></div>
+      <div class="col-3"><button @click.prevent="onRegister">Register</button></div>
+      <div class="col-3" v-show="mode == 'register'"><button @click.prevent="onCancel">Cancel</button></div>
+      <div class="col"><span class="form-message">{{ message }}</span></div>
     </div></div>
   </form></div>
 </div>
@@ -52,7 +52,7 @@ export default class Ingress extends Vue {
           location.href = '/'
           break
         default:
-          this.message = '信箱或密碼錯誤'
+          this.message = 'Incorrect mail or password'
           break
       }
     } else if (this.mode == 'register') {

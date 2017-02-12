@@ -2,7 +2,10 @@
 <div id="problem" class="grid" v-if="proitem !== null">
   <div class="col-2"><div class="grid">
     <div id="title" class="col-12">{{ proitem.problem.uid }} - {{ proitem.problem.name }}</div>
-    <div class="col-12"><button>Submit</button></div>
+    <div class="col-12">
+      <button @click="onSubmit">Submit</button>
+      <input ref="file" type="file" hidden="hidden" @change="onSelectedFile"/>
+    </div>
     <div id="information" class="col-12">
       <div class="grid">
         <div class="col">Languages</div>
@@ -28,7 +31,9 @@
       </div>
     </div>
   </div></div>
-  <iframe class="col" id="content" :src="`/api/proset/${$route.params.proset_uid}/${$route.params.proset_uid}/static/`"/>
+  <div class="col">
+    <iframe id="content" :src="`/api/proset/${proset_uid}/${proset_uid}/static/`"/>
+  </div>
 </div>
 </template>
 
@@ -40,13 +45,15 @@ import * as API from './api.ts'
 
 @Component
 export default class ViewProblem extends Vue {
+  proset_uid: number
+  proitem_uid: number
   proitem: API.ProItem | null = null
 
   @Watch('$route')
   async fetchData() {
-    let proset_uid: number = parseInt(this.$route.params['proset_uid'])
-    let proitem_uid: number = parseInt(this.$route.params['proitem_uid'])
-    let result = await API.getProItem(proset_uid, proitem_uid)
+    this.proset_uid = parseInt(this.$route.params['proset_uid'])
+    this.proitem_uid = parseInt(this.$route.params['proitem_uid'])
+    let result = await API.getProItem(this.proset_uid, this.proitem_uid)
     if (result !== 'Error') {
       this.proitem = result
     }
@@ -54,6 +61,27 @@ export default class ViewProblem extends Vue {
 
   async created() {
     await this.fetchData()
+  }
+
+  async onSubmit() {
+    let e_file = this.$refs['file'] as HTMLInputElement
+    e_file.click();
+  }
+
+  async onSelectedFile() {
+    let e_file = this.$refs['file'] as HTMLInputElement
+    if (e_file.files !== null) {
+      let file = e_file.files[0]
+      let reader = new FileReader()
+      if (file !== null && reader !== null) {
+        reader.onload = async () => {
+          let code: string = reader.result
+          let lang: string = 'c++'
+          await API.submit(this.proset_uid, this.proitem_uid, code, lang)
+        }
+        reader.readAsText(file)
+      }
+    }
   }
 }
 </script>

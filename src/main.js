@@ -5,6 +5,7 @@ import 'babel-polyfill'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import FormInput from './components/FormInput.vue'
+import FormLabel from './components/FormLabel.vue'
 import * as API from './api.ts'
 import * as UserSrv from './user-service.ts'
 import App from './App.vue'
@@ -17,6 +18,7 @@ import Profile from './Profile.vue'
 import Manage from './Manage.vue'
 import GroupManage from './GroupManage.vue'
 import ProblemManage from './ProblemManage.vue'
+import UserManage from './UserManage.vue'
 
 Vue.use(VueRouter)
 
@@ -43,12 +45,14 @@ const router = new VueRouter({
         { path: 'group', component: GroupManage },
         { path: 'group/:proset_uid', component: GroupManage },
         { path: 'problem', component: ProblemManage },
+        { path: 'user', component: UserManage },
       ],
     },
   ]
 })
 
 Vue.component('form-input', FormInput)
+Vue.component('form-label', FormLabel)
 
 API.emit('/user/get').then(user => {
   if (user != 'Error') {

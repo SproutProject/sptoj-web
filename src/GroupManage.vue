@@ -2,25 +2,23 @@
 <div id="group-manage" class="grid">
 <div class="col-2">
   <div class="grid">
-    <button class="col" @click="onCreateProSet">建立題集</button>
+    <div class="col"><button @click="onCreateProSet">New Collection</button></div>
   </div>
   <ul>
     <li v-for="proset in prosets" class="grid grid-noGutter">
-      <router-link :to="'/manage/group/' + proset.uid" class="col">{{ proset.name }}</router-link>
-      <button class="col-2">
-        <i class="fa fa-eye-slash" aria-hidden="true"></i>
-      </button>
-      <button class="col-2">
-        <i class="fa fa-trash-o" aria-hidden="true"></i>
-      </button>
+      <div class="col"><router-link :to="`/manage/group/${proset.uid}/`">{{ proset.name }}</router-link></div>
+      <div class="col-4"><div class="grid grid-noGutter">
+        <div class="col"><i class="fa btn" role="button" :class="proset.hidden ? 'fa-eye-slash' : 'fa-eye'" @click="onToggleProSetHidden(proset)"></i></div>
+        <div class="col"><i class="fa fa-trash-o btn" role="button" @click="onRemoveProSet(proset)"></i></div>
+      </div></div>
     </li>
   </ul>
 </div>
-<div class="col">
-  <div class="grid" v-if="current_proset !== null">
+<div class="col" v-if="current_proset !== null">
+  <div class="grid">
     <div class="col"><input type="text" v-model="current_proset.name"/></div>
-    <button class="col-2" @click="onApplyName">儲存名稱</button>
-    <button class="col-2" @click="onShowAddProItem">新增題目</button>
+    <div class="col-1"><button @click="onApplyName">Apply</button></div>
+    <div class="col-2"><button @click="onShowAddProItem">Add Problem</button></div>
   </div>
   <div class="grid" v-show="show_add_proitem">
     <div class="col">
@@ -29,26 +27,38 @@
       </select>
     </div>
     <div class="col-4">
-      <input type="text" placeholder="期限 (1984/01/01)" disabled/>
+      <input type="text" placeholder="Deadline (1984/01/01)" disabled/>
     </div>
     <div class="col-2">
-      <input type="text" placeholder="章節" disabled/>
+      <input type="text" placeholder="Chapter" disabled/>
     </div>
-    <button class="col-1" @click="onAddProItem">加入</button>
-    <button class="col-1" @click="show_add_proitem = false">取消</button>
+    <div class="col-1"><button @click="onAddProItem">Add</button></div>
+    <div class="col-2"><button @click="show_add_proitem = false">Cancel</button></div>
   </div>
-  <div class="grid">
-    <div v-for="proitem in current_proitems" class="col-12">
-      {{ proitem.problem.name }}
-    </div>
-  </div>
+  <table>
+    <tr class="grid">
+      <th class="col">Problem</th>
+      <th class="col-2">Deadline</th>
+      <th class="col-2">Chapter</th>
+      <th class="col-2"></th>
+    </tr>
+    <tr v-for="proitem in current_proitems" class="grid">
+      <td class="col"><router-link :to="`/problem/${current_proset.uid}/${proitem.uid}/`">{{ proitem.problem.name }}</td>
+      <td class="col-2"></td>
+      <td class="col-2"></td>
+      <td class="col-2"><div class="grid grid-noGutter">
+        <div class="col"><i class="fa fa-floppy-o btn" role="button"></i></div>
+        <div class="col"><i class="fa btn" role="button" :class="proitem.hidden ? 'fa-eye-slash' : 'fa-eye'" @click="onToggleProItemHidden(proitem)"></i></div>
+        <div class="col"><i class="fa fa-trash-o btn" role="button" @click="onRemoveProItem(proitem)"></i></div>
+      </div></td>
+    </tr>
+  </table>
 </div>
 </template>
 
 <script lang="ts">
 import * as Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Route } from 'vue-router'
 import * as API from './api.ts'
 
 @Component
@@ -56,50 +66,67 @@ export default class GroupManage extends Vue {
   show_add_proitem: boolean = false
   prosets: API.ProSet[] = []
   current_proset: API.ProSet | null = null
-  current_proitems: API.ProItem[] | null = null
+  current_proitems: API.ProItem[] = []
   available_problems: API.Problem[] = []
   selected_problem: API.Problem | null = null
 
-  async beforeRouteEnter(to: Route, from: Route, next: Function) {
-    next((vm: GroupManage) => {
-      vm.onChangeProSet.bind(vm)()
-    })
+  @Watch('$route')
+  async fetchData() {
+    this.current_proset = null
+    this.current_proitems = []
+    this.available_problems = []
+    this.selected_problem = null
+
+    let prosets_result = await API.listProSet()
+    if (prosets_result !== 'Error') {
+      this.prosets = prosets_result
+    }
+    if (!('proset_uid' in this.$route.params)) {
+      this.current_proset = null
+    } else {
+      let proset_uid: number = parseInt(this.$route.params['proset_uid'])
+      let [proset_result, proitems_result] = await Promise.all([
+        API.getProSet(proset_uid),
+        API.listProItem(proset_uid)
+      ])
+      if (proset_result !== 'Error') {
+        this.current_proset = proset_result
+      }
+      if (proitems_result !== 'Error') {
+        this.current_proitems = proitems_result
+      }
+    }
   }
 
-  @Watch('$route')
-  async onChangeProSet() {
-    let result = await API.listProSet()
-    if (result !== 'Error') {
-      this.prosets = result
-    }
-
-    if ('proset_uid' in this.$route.params) {
-      let proset_uid: number = parseInt(this.$route.params['proset_uid'])
-      let result = await API.getProSet(proset_uid)
-      if (result !== 'Error') {
-        this.current_proset = result
-        let proitems = await API.listProItem(proset_uid)
-        if (proitems !== 'Error') {
-          this.current_proitems = proitems
-        }
-      }
-    } else {
-      this.current_proset = null
-    }
+  async created() {
+    await this.fetchData()
   }
 
   async onCreateProSet() {
-    let result = await API.createProSet('新題集')
+    let result = await API.createProSet('New Colle')
     if (result !== 'Error') {
       let proset_uid: number = result
       this.$router.push(`/manage/group/${proset_uid}`)
     }
   }
 
+  async onToggleProSetHidden(proset: API.ProSet) {
+    proset.hidden = !proset.hidden
+    if (await API.setProSet(proset) === 'Error') {
+      proset.hidden = !proset.hidden
+    }
+  }
+
+  async onRemoveProSet(proset: API.ProSet) {
+    if (await API.removeProSet(proset.uid) === 'Success') {
+      this.$router.push(`/manage/group/`)
+    }
+  }
+
   async onApplyName() {
     if (this.current_proset !== null) {
       if (await API.setProSet(this.current_proset) === 'Success') {
-        await this.onChangeProSet()
+        await this.fetchData()
       }
     }
   }
@@ -117,7 +144,25 @@ export default class GroupManage extends Vue {
       let result = await API.addProItem(this.current_proset, this.selected_problem)
       if (result !== 'Error') {
         this.show_add_proitem = false
-        await this.onChangeProSet()
+        await this.fetchData()
+      }
+    }
+  }
+
+  async onToggleProItemHidden(proitem: API.ProItem) {
+    if (this.current_proset !== null) {
+      proitem.hidden = !proitem.hidden;
+      if (await API.setProItem(this.current_proset.uid, proitem) === 'Error') {
+        proitem.hidden = !proitem.hidden;
+      }
+    }
+  }
+
+  async onRemoveProItem(proitem: API.ProItem) {
+    if (this.current_proset !== null) {
+      if (await API.removeProItem(this.current_proset.uid, proitem.uid) === 'Success') {
+        let index = this.current_proitems.indexOf(proitem)
+        this.current_proitems.splice(index, 1)
       }
     }
   }

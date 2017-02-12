@@ -1,5 +1,8 @@
 @import "gridlex.less";
 
+@gutter: @gl-gutter / 2;
+@zebra: repeating-linear-gradient(-45deg, transparent, transparent 1px, rgba(0,0,0,1) 1px, rgba(0,0,0,1) 2px);
+
 * {
   // Set default styles.
   box-sizing: border-box;
@@ -27,34 +30,39 @@ a {
 button {
   height: 2rem;
   line-height: 2rem;
-  background: transparent;
+  width: 100%;
+  background-color: lightgray;
   cursor: pointer;
+  display: block;
 
-  &:before {
-    content: "";
-    height: 1px;
-    width: 100%;
-    background-color: black;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
-  }
-  
-  &:after {
-    content: "";
-    height: 100%;
-    width: 100%;
-    background-color: lightgray;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -2;
-  }
+  &:hover {
+    background-color: gray;
 
-  &:hover:before {
-    height: 100%;
-    transition: height 0.05s linear;
+    &:before {
+      content: "";
+      height: 3px;
+      width: 100%;
+      background-color: darkgray;
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      z-index: 1;
+    }
+  }
+}
+
+i.btn {
+  height: 2rem;
+  line-height: 2rem;
+  width: 100%;
+  background-color: transparent;
+  color: gray;
+  cursor: pointer;
+  text-align: center;
+  display: block;
+
+  &:hover {
+    color: black;
   }
 }
 
@@ -68,6 +76,40 @@ input, select {
   display: block;
 }
 
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  
+  li {
+    a {
+      height: 2rem;
+      line-height: 2rem;
+      width: auto; 
+      padding-left: @gutter;
+      border-left: solid 2px black;
+      display: block;
+
+      &.router-link-active {
+        border-left-width: 8px;
+      } 
+    }
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+
+  th, td {
+    height: 2rem;
+    line-height: 2rem;
+    text-align: left;
+    display: block;
+  }
+}
+
 div.container {
   max-width: 80em;
   margin: 0 auto;
@@ -77,10 +119,11 @@ div.form-input {
   height: 2rem;
   line-height: 2rem;
   
-  > label {
+  label.form-label {
     height: 2rem;
-    padding-left: 0.5rem;
+    width: 100%;
     border-bottom: solid 1px black;
+    display: block;
   }
 }
 
