@@ -27,10 +27,10 @@
       </select>
     </div>
     <div class="col-4">
-      <input type="text" placeholder="Deadline (1984/01/01)" disabled/>
+      <input type="text" placeholder="Deadline (1984/01/01+0800)" v-model="selected_deadline"/>
     </div>
     <div class="col-2">
-      <input type="text" placeholder="Chapter" disabled/>
+      <input type="text" placeholder="Section" v-model="selected_section"/>
     </div>
     <div class="col-1"><button @click="onAddProItem">Add</button></div>
     <div class="col-2"><button @click="show_add_proitem = false">Cancel</button></div>
@@ -39,15 +39,19 @@
     <tr class="grid">
       <th class="col">Problem</th>
       <th class="col-2">Deadline</th>
-      <th class="col-2">Chapter</th>
+      <th class="col-2">Section</th>
       <th class="col-2"></th>
     </tr>
     <tr v-for="proitem in current_proitems" class="grid">
       <td class="col"><router-link :to="`/problem/${current_proset.uid}/${proitem.uid}/`">{{ proitem.problem.name }}</td>
-      <td class="col-2"></td>
-      <td class="col-2"></td>
+      <td class="col-2">
+        <input type="text" placeholder="No Deadline" v-model="proitem.deadline"/>
+      </td>
+      <td class="col-2">
+        <input type="text" placeholder="Section" v-model="proitem.metadata['section']"/>
+      </td>
       <td class="col-2"><div class="grid grid-noGutter">
-        <div class="col"><i class="fa fa-floppy-o btn" role="button"></i></div>
+        <div class="col"><i class="fa fa-floppy-o btn" role="button" @click="onApplyProItem(proitem)"></i></div>
         <div class="col"><i class="fa btn" role="button" :class="proitem.hidden ? 'fa-eye-slash' : 'fa-eye'" @click="onToggleProItemHidden(proitem)"></i></div>
         <div class="col"><i class="fa fa-trash-o btn" role="button" @click="onRemoveProItem(proitem)"></i></div>
       </div></td>
@@ -59,6 +63,7 @@
 <script lang="ts">
 import * as Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
+import * as _ from 'lodash'
 import * as API from './api.ts'
 
 @Component
@@ -69,13 +74,15 @@ export default class GroupManage extends Vue {
   current_proitems: API.ProItem[] = []
   available_problems: API.Problem[] = []
   selected_problem: API.Problem | null = null
+  selected_deadline: string | null = null
+  selected_section: string = ''
 
   @Watch('$route')
-  async fetchData() {
-    this.current_proset = null
-    this.current_proitems = []
-    this.available_problems = []
-    this.selected_problem = null
+  async fetchData(reset=true) {
+    if (reset) {
+      this.current_proset = null
+      this.current_proitems = []
+    }
 
     let prosets_result = await API.listProSet()
     if (prosets_result !== 'Error') {
@@ -84,7 +91,7 @@ export default class GroupManage extends Vue {
     if (!('proset_uid' in this.$route.params)) {
       this.current_proset = null
     } else {
-      let proset_uid: number = parseInt(this.$route.params['proset_uid'])
+      let proset_uid = parseInt(this.$route.params['proset_uid'])
       let [proset_result, proitems_result] = await Promise.all([
         API.getProSet(proset_uid),
         API.listProItem(proset_uid)
@@ -103,17 +110,17 @@ export default class GroupManage extends Vue {
   }
 
   async onCreateProSet() {
-    let result = await API.createProSet('New Colle')
-    if (result !== 'Error') {
-      let proset_uid: number = result
-      this.$router.push(`/manage/group/${proset_uid}`)
+    let proset_uid = await API.createProSet('New Colle')
+    if (proset_uid !== 'Error') {
+      this.$router.push(`/manage/group/${proset_uid}/`)
     }
   }
 
   async onToggleProSetHidden(proset: API.ProSet) {
-    proset.hidden = !proset.hidden
-    if (await API.setProSet(proset) === 'Error') {
-      proset.hidden = !proset.hidden
+    let modified_proset = _.cloneDeep(proset)
+    modified_proset.hidden = !modified_proset.hidden
+    if (await API.setProSet(modified_proset) === 'Success') {
+      proset.hidden = modified_proset.hidden
     }
   }
 
@@ -132,29 +139,48 @@ export default class GroupManage extends Vue {
   }
 
   async onShowAddProItem() {
+    this.available_problems = []
+    this.selected_problem = null
+    this.selected_deadline = null
+    this.selected_section = ''
+    this.show_add_proitem = true
     let result = await API.listProblem()
     if (result !== 'Error') {
       this.available_problems = result
-      this.show_add_proitem = true
     }
   }
 
   async onAddProItem() {
     if (this.current_proset !== null && this.selected_problem !== null) {
-      let result = await API.addProItem(this.current_proset, this.selected_problem)
-      if (result !== 'Error') {
-        this.show_add_proitem = false
-        await this.fetchData()
+      let proset_uid = this.current_proset.uid
+      let proitem_uid = await API.addProItem(proset_uid, this.selected_problem)
+      if (proitem_uid !== 'Error') {
+        let proitem = await API.getProItem(proset_uid, proitem_uid)
+        if (proitem !== 'Error') {
+          proitem.deadline = this.selected_deadline
+          proitem.metadata = { section: this.selected_section }
+          if (await API.setProItem(proset_uid, proitem) === 'Success') {
+            this.show_add_proitem = false
+            await this.fetchData(false)
+          }
+        }
       }
     }
   }
 
   async onToggleProItemHidden(proitem: API.ProItem) {
     if (this.current_proset !== null) {
-      proitem.hidden = !proitem.hidden;
-      if (await API.setProItem(this.current_proset.uid, proitem) === 'Error') {
-        proitem.hidden = !proitem.hidden;
+      let modified_proitem = _.cloneDeep(proitem)
+      modified_proitem.hidden = !modified_proitem.hidden;
+      if (await API.setProItem(this.current_proset.uid, modified_proitem) === 'Success') {
+        proitem.hidden = modified_proitem.hidden;
       }
+    }
+  }
+
+  async onApplyProItem(proitem: API.ProItem) {
+    if (this.current_proset !== null) {
+      if (await API.setProItem(this.current_proset.uid, proitem) === 'Success') {}
     }
   }
 

@@ -12,6 +12,8 @@
     "vue": "^2.1.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.52",
+    "@types/moment-timezone": "^0.2.34",
     "babel-core": "^6.0.0",
     "babel-loader": "^6.0.0",
     "babel-polyfill": "^6.22.0",
@@ -21,6 +23,8 @@
     "file-loader": "^0.9.0",
     "less": "^2.7.2",
     "less-loader": "^2.2.3",
+    "lodash": "^4.17.4",
+    "moment-timezone": "^0.5.11",
     "style-loader": "^0.13.1",
     "ts-loader": "^2.0.0",
     "typescript": "^2.1.5",

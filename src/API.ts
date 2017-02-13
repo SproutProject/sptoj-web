@@ -1,4 +1,6 @@
 import axios from 'axios';
+import * as _ from 'lodash';
+import * as moment from 'moment-timezone';
 
 export interface Problem {
   uid: number
@@ -15,6 +17,8 @@ export interface Problem {
 export interface ProItem {
   uid: number
   hidden: boolean
+  deadline: string | null
+  metadata: Object
   problem: Problem
 }
 
@@ -22,6 +26,25 @@ export interface ProSet {
   uid: number
   name: string
   hidden: boolean
+}
+
+class ProItemObject implements ProItem {
+  uid: number
+  hidden: boolean
+  deadline: string | null
+  metadata: Object
+  problem: Problem
+
+  constructor(proitem: ProItem) {
+    this.uid = proitem.uid
+    this.hidden = proitem.hidden
+    if (proitem.deadline === null) {
+      this.deadline = null
+    } else {
+    }
+    this.metadata = proitem.metadata
+    this.problem = proitem.problem
+  }
 }
 
 export async function emit<T>(path: string, data = {}): Promise<T> {
@@ -54,18 +77,31 @@ export async function removeProSet(proset_uid: number): Promise<'Error' | 'Succe
   return await emit<'Error' | 'Success'>(`/proset/${proset_uid}/remove`, {})
 }
 
-export async function addProItem(proset: ProSet, problem: Problem): Promise<'Error' | number> {
-  return await emit<'Error' | number>(`/proset/${proset.uid}/add`, {
+export async function addProItem(proset_uid: number, problem: Problem): Promise<'Error' | number> {
+  return await emit<'Error' | number>(`/proset/${proset_uid}/add`, {
     problem_uid: problem.uid,
   })
 }
 
 export async function getProItem(proset_uid: number, proitem_uid: number): Promise<'Error' | ProItem> {
-  return await emit<'Error' | ProItem>(`/proset/${proset_uid}/${proitem_uid}/get`, {})
+  let proitem = await emit<'Error' | ProItem>(`/proset/${proset_uid}/${proitem_uid}/get`, {})
+  if (proitem !== 'Error') {
+    if (proitem.deadline !== null) {
+      let date = moment(proitem.deadline, moment.ISO_8601).tz(moment.tz.guess())
+      proitem.deadline = date.format('YYYY/MM/DD')
+    }
+  }
+  return proitem
 }
 
 export async function setProItem(proset_uid: number, proitem: ProItem): Promise<'Error' | 'Success'> {
-  return await emit<'Error' | 'Success'>(`/proset/${proset_uid}/${proitem.uid}/set`, proitem)
+  let modified_proitem = _.cloneDeep(proitem)
+  if (proitem.deadline === '') {
+    modified_proitem.deadline = null
+  } else if (proitem.deadline !== null) {
+    modified_proitem.deadline = proitem.deadline + '+0800'
+  }
+  return await emit<'Error' | 'Success'>(`/proset/${proset_uid}/${proitem.uid}/set`, modified_proitem)
 }
 
 export async function removeProItem(proset_uid: number, proitem_uid: number): Promise<'Error' | 'Success'> {
@@ -73,7 +109,16 @@ export async function removeProItem(proset_uid: number, proitem_uid: number): Pr
 }
 
 export async function listProItem(proset_uid: number): Promise<'Error' | ProItem[]> {
-  return await emit<'Error' | ProItem[]>(`/proset/${proset_uid}/list`, {})
+  let proitems = await emit<'Error' | ProItem[]>(`/proset/${proset_uid}/list`, {})
+  if (proitems !== 'Error') {
+    for (let proitem of proitems) {
+      if (proitem.deadline !== null) {
+        let date = moment(proitem.deadline, moment.ISO_8601).tz(moment.tz.guess())
+        proitem.deadline = date.format('YYYY/MM/DD')
+      }
+    }
+  }
+  return proitems
 }
 
 export async function submit(proset_uid: number, proitem_uid: number, code: string, lang: string): Promise<'Error' | number> {
