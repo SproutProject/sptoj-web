@@ -1,8 +1,8 @@
 <template>
 <div id="group-board" class="grid">
-  <div class="col-2">
-    <div class="col-12" v-for="group in groups"><router-link :to="`/group/${group.uid}/`">{{ group.name }}</router-link></div>
-  </div>
+  <div class="col-2"><ul>
+    <li class="grid" v-for="group in groups"><router-link :to="`/group/${group.uid}/`">{{ group.name }}</router-link></li>
+  </ul></div>
   <div class="col"><router-view></router-view></div>
 </div>
 </template>

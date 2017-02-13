@@ -32,7 +32,7 @@
     </div>
   </div></div>
   <div class="col">
-    <iframe id="content" :src="`/api/proset/${proset_uid}/${proset_uid}/static/`"/>
+    <iframe id="content" :src="`/api/proset/${proset_uid}/${proitem_uid}/static/`" scrolling="no" @load="resizeContent"/>
   </div>
 </div>
 </template>
@@ -42,12 +42,17 @@ import * as Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import * as API from './api.ts'
 
+declare function iFrameResize(options: any): any
 
 @Component
 export default class ViewProblem extends Vue {
   proset_uid: number
   proitem_uid: number
   proitem: API.ProItem | null = null
+
+  resizeContent() {
+    iFrameResize({ log: true })
+  }
 
   @Watch('$route')
   async fetchData() {
@@ -85,3 +90,9 @@ export default class ViewProblem extends Vue {
   }
 }
 </script>
+
+<style lang="less">
+#content {
+  width: 100%;
+}
+</style>
