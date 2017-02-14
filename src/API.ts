@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as _ from 'lodash';
 import * as moment from 'moment-timezone';
+import { User } from './user-service'
 
 export interface Problem {
   uid: number
@@ -18,7 +19,7 @@ export interface ProItem {
   uid: number
   hidden: boolean
   deadline: string | null
-  metadata: Object
+  metadata: { section: string }
   problem: Problem
 }
 
@@ -28,23 +29,27 @@ export interface ProSet {
   hidden: boolean
 }
 
-class ProItemObject implements ProItem {
-  uid: number
-  hidden: boolean
-  deadline: string | null
-  metadata: Object
-  problem: Problem
+export enum JudgeState {
+  pending = 0,
+  judging = 1,
+  done = 2,
+}
 
-  constructor(proitem: ProItem) {
-    this.uid = proitem.uid
-    this.hidden = proitem.hidden
-    if (proitem.deadline === null) {
-      this.deadline = null
-    } else {
-    }
-    this.metadata = proitem.metadata
-    this.problem = proitem.problem
-  }
+export interface Subtask {
+  uid: number
+  index: number
+  state: JudgeState
+  metadata: void
+}
+
+export interface Challenge {
+  uid: number
+  state: JudgeState
+  timestamp: string
+  metadata: void
+  submitter: User
+  problem: Problem
+  subtasks: Subtask[]
 }
 
 export async function emit<T>(path: string, data = {}): Promise<T> {
@@ -134,4 +139,30 @@ export async function updateProblem(): Promise<'Error' | 'Success'> {
 
 export async function listProblem(): Promise<'Error' | Problem[]> {
   return await emit<'Error' | Problem[]>(`/problem/list`, {})
+}
+
+export async function getChallenge(challenge_uid: number): Promise<'Error' | Challenge> {
+  let challenge = await emit<'Error' | Challenge>(`/challenge/${challenge_uid}/get`, {})
+  if (challenge !== 'Error') {
+    let date = moment(challenge.timestamp, moment.ISO_8601).tz(moment.tz.guess())
+    challenge.timestamp = date.format('YYYY/MM/DD HH:mm:ss')
+  }
+  return challenge
+}
+
+export function getResult(state: JudgeState, result: number): string {
+  switch (state) {
+    case JudgeState.pending: return 'Pending'
+    case JudgeState.judging: return 'Judging'
+    case JudgeState.done:
+      switch (result) {
+        case 1: return 'Accepted'
+        case 2: return 'Wrong Answer'
+        case 3: return 'Runtime Error'
+        case 4: return 'Time Limit Exceeded'
+        case 5: return 'Memory Limit Exceeded'
+        case 6: return 'Compile Error'
+        default: return 'Other'
+      }
+  }
 }

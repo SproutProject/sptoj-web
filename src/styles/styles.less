@@ -156,7 +156,7 @@ span.form-message {
       content: "";
       height: 1px;
       width: 100%;
-      background-color: black;
+      background-color: gray;
       position: absolute;
       bottom: 0;
       left: 0;
@@ -167,15 +167,19 @@ span.form-message {
       text-decoration: none;
 
       &:before {
-        height: 5px;
-        bottom: -4px;
+        height: 4px;
+        bottom: -3px;
       }
     }
 
     &.router-link-active {
+      color: white;
+
       &:before {
-        height: ~"calc(100% + 5px)";
-        bottom: -4px;
+        height: ~"calc(100% + 4px)";
+        background-color: darkgray;
+        border-bottom: solid 4px gray;
+        bottom: -3px;
         transition: height 0.05s linear;
       }
     }
