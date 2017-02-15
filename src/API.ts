@@ -19,7 +19,7 @@ export interface ProItem {
   uid: number
   hidden: boolean
   deadline: string | null
-  metadata: { section: string }
+  metadata: { section?: string }
   problem: Problem
 }
 
@@ -27,6 +27,7 @@ export interface ProSet {
   uid: number
   name: string
   hidden: boolean
+  metadata: { category?: number }
 }
 
 export enum JudgeState {
@@ -84,10 +85,7 @@ export async function getProSet(proset_uid: number): Promise<'Error' | ProSet> {
 }
 
 export async function setProSet(proset: ProSet): Promise<'Error' | 'Success'> {
-  return await emit<'Error' | 'Success'>(`/proset/${proset.uid}/set`, {
-    name: proset.name,
-    hidden: proset.hidden,
-  })
+  return await emit<'Error' | 'Success'>(`/proset/${proset.uid}/set`, proset)
 }
 
 export async function removeProSet(proset_uid: number): Promise<'Error' | 'Success'> {

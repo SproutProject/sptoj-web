@@ -17,7 +17,15 @@
 <div class="col" v-if="current_proset !== null">
   <div class="grid">
     <div class="col"><input type="text" v-model="current_proset.name"/></div>
-    <div class="col-1"><button @click="onApplyName">Apply</button></div>
+    <div class="col-2">
+      <select v-model="current_proset.metadata.category">
+          <option :value="0">Universe</option>
+          <option :value="1">Algo</option>
+          <option :value="2">CLang</option>
+          <option :value="3">PyLang</option>
+        </select>
+      </div>
+    <div class="col-1"><button @click="onApplyProSet">Apply</button></div>
     <div class="col-2"><button @click="onShowAddProItem">Add Problem</button></div>
   </div>
   <div class="grid" v-show="show_add_proitem">
@@ -48,7 +56,7 @@
         <input type="text" placeholder="No Deadline" v-model="proitem.deadline"/>
       </td>
       <td class="col-2">
-        <input type="text" placeholder="Section" v-model="proitem.metadata['section']"/>
+        <input type="text" placeholder="Section" v-model="proitem.metadata.section"/>
       </td>
       <td class="col-2"><div class="grid grid-noGutter">
         <div class="col"><i class="fa fa-floppy-o btn" role="button" @click="onApplyProItem(proitem)"></i></div>
@@ -64,6 +72,7 @@
 import * as Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import * as _ from 'lodash'
+import { UserCategory } from './user-service.ts'
 import * as API from './api.ts'
 
 @Component
@@ -112,7 +121,21 @@ export default class GroupManage extends Vue {
   async onCreateProSet() {
     let proset_uid = await API.createProSet('New Colle')
     if (proset_uid !== 'Error') {
-      this.$router.push(`/manage/group/${proset_uid}/`)
+      let proset = await API.getProSet(proset_uid)
+      if (proset !== 'Error') {
+        proset.metadata = { category: UserCategory.universe }
+        if (await API.setProSet(proset) === 'Success') {
+          this.$router.push(`/manage/group/${proset_uid}/`)
+        }
+      }
+    }
+  }
+  
+  async onApplyProSet() {
+    if (this.current_proset !== null) {
+      if (await API.setProSet(this.current_proset) === 'Success') {
+        await this.fetchData()
+      }
     }
   }
 
@@ -127,14 +150,6 @@ export default class GroupManage extends Vue {
   async onRemoveProSet(proset: API.ProSet) {
     if (await API.removeProSet(proset.uid) === 'Success') {
       this.$router.push(`/manage/group/`)
-    }
-  }
-
-  async onApplyName() {
-    if (this.current_proset !== null) {
-      if (await API.setProSet(this.current_proset) === 'Success') {
-        await this.fetchData()
-      }
     }
   }
 
