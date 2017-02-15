@@ -37,7 +37,7 @@ const router = new VueRouter({
         { path: ':proset_uid', component: Group },
       ],
     },
-    { path: '/problem/:proset_uid/:proitem_uid/:view?', component: Problem },
+    { path: '/problem/:problem_uid/:view?', component: Problem },
     { path: '/challenge/:challenge_uid/', component: Challenge },
     { path: '/profile', component: Profile },
     {

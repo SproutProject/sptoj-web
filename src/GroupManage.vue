@@ -43,7 +43,7 @@
       <th class="col-2"></th>
     </tr>
     <tr v-for="proitem in current_proitems" class="grid">
-      <td class="col"><router-link :to="`/problem/${current_proset.uid}/${proitem.uid}/`">{{ proitem.problem.name }}</td>
+      <td class="col"><router-link :to="`/problem/${proitem.problem.uid}/`">{{ proitem.problem.name }}</td>
       <td class="col-2">
         <input type="text" placeholder="No Deadline" v-model="proitem.deadline"/>
       </td>

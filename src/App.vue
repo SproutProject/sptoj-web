@@ -7,8 +7,8 @@
       <router-link to="/rank/" class="col-1 link">Ranking</router-link>
       <router-link to="/status/" class="col-1 link">Status</router-link>
       <router-link to="/group/" class="col-1 link">Collection</router-link>
-      <router-link to="/ingress/" class="col link" data-push-left="off-4" v-if="!login">Sign In | Up</router-link>
-      <router-link to="/profile/" class="col link" data-push-left="off-4" v-if="login">{{ name }}</router-link>
+      <router-link to="/ingress/" class="col link" data-push-left="off-4" v-if="identity === null">Sign In | Up</router-link>
+      <router-link to="/profile/" class="col link" data-push-left="off-4" v-if="identity !== null">{{ identity.name }}</router-link>
     </div></div>
   </div>
   <div id="view"  class="container">
@@ -24,7 +24,6 @@ import * as UserSrv from './user-service.ts'
 
 @Component
 export default class App extends Vue {
-  login: boolean = UserSrv.login
-  name: string = UserSrv.identity.name
+  identity: UserSrv.User | null = UserSrv.identity
 }
 </script>

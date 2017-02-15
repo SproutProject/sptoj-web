@@ -1,9 +1,9 @@
 <template>
-<div id="problem" class="grid" v-if="proitem !== null">
+<div id="problem" class="grid" v-if="problem !== null">
   <div class="col-2"><div class="grid">
     <div id="title" class="col-12"><div class="grid">
-      <div class="col-1">{{ proitem.problem.uid }}.</div>
-      <div class="col">{{ proitem.problem.name }}</div>
+      <div class="col-1">{{ problem.uid }}.</div>
+      <div class="col">{{ problem.name }}</div>
     </div></div>
     <div id="information" class="col-12">
       <table>
@@ -13,15 +13,15 @@
         </tr>
         <tr class="grid">
           <td class="col">Language</td>
-          <td class="col">{{ proitem.problem.lang }}</td>
+          <td class="col">{{ problem.lang }}</td>
         </tr>
         <tr class="grid">
           <td class="col">Timelimit</td>
-          <td class="col">{{ proitem.problem.timelimit }}</td>
+          <td class="col">{{ problem.timelimit }}</td>
         </tr>
         <tr class="grid">
           <td class="col">Memlimit</td>
-          <td class="col">{{ proitem.problem.memlimit }}</td>
+          <td class="col">{{ problem.memlimit }}</td>
         </tr>
       </table>
     </div>
@@ -31,7 +31,7 @@
           <th class="col">Subtask</th>
           <th class="col">Weight</th>
         </tr>
-        <tr v-for="(weight, index) in proitem.problem.subtask" class="grid">
+        <tr v-for="(weight, index) in problem.subtask" class="grid">
           <td class="col">{{ index + 1 }}</td>
           <td class="col">{{ weight }}</td>
         </tr>
@@ -44,7 +44,7 @@
     </div></div>
   </div></div>
   <div class="col">
-    <iframe id="content" :src="`/api/proset/${proset_uid}/${proitem_uid}/static/`" scrolling="no" @load="resizeContent"/>
+    <iframe id="content" :src="`/api/problem/${problem_uid}/static/`" scrolling="no" @load="resizeContent"/>
   </div>
 </div>
 </template>
@@ -58,9 +58,8 @@ declare function iFrameResize(options: any): any
 
 @Component
 export default class Problem extends Vue {
-  proset_uid: number
-  proitem_uid: number
-  proitem: API.ProItem | null = null
+  problem_uid: number
+  problem: API.Problem | null = null
 
   resizeContent() {
     iFrameResize({})
@@ -68,11 +67,10 @@ export default class Problem extends Vue {
 
   @Watch('$route')
   async fetchData() {
-    this.proset_uid = parseInt(this.$route.params['proset_uid'])
-    this.proitem_uid = parseInt(this.$route.params['proitem_uid'])
-    let result = await API.getProItem(this.proset_uid, this.proitem_uid)
+    this.problem_uid = parseInt(this.$route.params['problem_uid'])
+    let result = await API.getProblem(this.problem_uid)
     if (result !== 'Error') {
-      this.proitem = result
+      this.problem = result
     }
   }
 
@@ -89,7 +87,7 @@ export default class Problem extends Vue {
         reader.onload = async () => {
           let code: string = reader.result
           let lang: string = 'g++'
-          let challenge_uid = await API.submit(this.proset_uid, this.proitem_uid, code, lang)
+          let challenge_uid = await API.submit(this.problem_uid, code, lang)
           if (challenge_uid !== 'Error') {
             this.$router.push(`/challenge/${challenge_uid}/`)
           }

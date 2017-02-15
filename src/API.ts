@@ -1,7 +1,7 @@
-import axios from 'axios';
-import * as _ from 'lodash';
-import * as moment from 'moment-timezone';
-import { User } from './user-service'
+import axios from 'axios'
+import * as _ from 'lodash'
+import * as moment from 'moment-timezone'
+import { User, UserCategory } from './user-service'
 
 export interface Problem {
   uid: number
@@ -55,6 +55,18 @@ export interface Challenge {
 export async function emit<T>(path: string, data = {}): Promise<T> {
   let result = await axios.post('/api' + path, data);
   return result.data as T
+}
+
+export async function listUser(): Promise<'Error' | User[]> {
+  return await emit<'Error' | User[]>('/user/list', {})
+}
+
+export async function setUser(user: User): Promise<'Error' | 'Success'> {
+  return await emit<'Error' | 'Success'>(`/user/${user.uid}/set`, user)
+}
+
+export async function removeUser(user_uid: number): Promise<'Error' | 'Success'> {
+  return await emit<'Error' | 'Success'>(`/user/${user_uid}/remove`, {})
 }
 
 export async function listProSet(): Promise<'Error' | ProSet[]> {
@@ -126,19 +138,20 @@ export async function listProItem(proset_uid: number): Promise<'Error' | ProItem
   return proitems
 }
 
-export async function submit(proset_uid: number, proitem_uid: number, code: string, lang: string): Promise<'Error' | number> {
-  return await emit<'Error' | number>(`/proset/${proset_uid}/${proitem_uid}/submit`, {
-    code,
-    lang,
-  })
-}
-
 export async function updateProblem(): Promise<'Error' | 'Success'> {
   return await emit<'Error' | 'Success'>(`/problem/update`, {})
 }
 
 export async function listProblem(): Promise<'Error' | Problem[]> {
   return await emit<'Error' | Problem[]>(`/problem/list`, {})
+}
+
+export async function getProblem(problem_uid: number): Promise<'Error' | Problem> {
+  return await emit<'Error' | Problem>(`/problem/${problem_uid}/get`, {})
+}
+
+export async function submit(problem_uid: number, code: string, lang: string): Promise<'Error' | number> {
+  return await emit<'Error' | number>(`/problem/${problem_uid}/submit`, { code, lang })
 }
 
 export async function getChallenge(challenge_uid: number): Promise<'Error' | Challenge> {
@@ -148,6 +161,10 @@ export async function getChallenge(challenge_uid: number): Promise<'Error' | Cha
     challenge.timestamp = date.format('YYYY/MM/DD HH:mm:ss')
   }
   return challenge
+}
+
+export function getCategory(category: UserCategory): string {
+  return ''
 }
 
 export function getResult(state: JudgeState, result: number): string {

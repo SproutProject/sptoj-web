@@ -8,7 +8,7 @@
     </tr>
     <tr v-for="proitem in proitems" class="grid">
       <td class="col-1">{{ proitem.problem.uid }}</td>
-      <td class="col"><router-link :to="`/problem/${proset.uid}/${proitem.uid}/`">{{ proitem.problem.name }}</router-link></td>
+      <td class="col"><router-link :to="`/problem/${proitem.problem.uid}/`">{{ proitem.problem.name }}</router-link></td>
       <td class="col-2">{{ proitem.deadline ? proitem.deadline : 'None' }}</td>
     </tr>
   </table></div>
@@ -18,7 +18,6 @@
 <script lang="ts">
 import * as Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import { Route } from 'vue-router'
 import * as API from './api.ts'
 
 @Component
