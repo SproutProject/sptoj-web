@@ -18,7 +18,6 @@ export interface Problem {
   memlimit: number
   lang: string
   checker: string
-  scoring: string
   subtask: number[]
 }
 
@@ -153,12 +152,16 @@ export async function listProItem(proset_uid: number): Promise<'Error' | ProItem
   return proitems
 }
 
-export async function updateProblem(): Promise<'Error' | 'Success'> {
-  return await emit<'Error' | 'Success'>(`/problem/update`, {})
+export async function updateProblem(problem_uid: number, git_url: string): Promise<'Error' | 'Success'> {
+  return await emit<'Error' | 'Success'>(`/problem/${problem_uid}/update`, { git_url })
 }
 
-export async function listProblem(): Promise<'Error' | Problem[]> {
-  return await emit<'Error' | Problem[]>(`/problem/list`, {})
+export async function removeProblem(problem_uid: number): Promise<'Error' | 'Success'> {
+  return await emit<'Error' | 'Success'>(`/problem/${problem_uid}/remove`, {})
+}
+
+export async function listProblem(): Promise<'Error' | { problem: Problem, git: string }[]> {
+  return await emit<'Error' | { problem: Problem, git: string }[]>(`/problem/list`, {})
 }
 
 export async function getProblem(problem_uid: number): Promise<'Error' | { problem: Problem, rate?: ProblemRate[] }> {

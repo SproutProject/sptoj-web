@@ -12,7 +12,7 @@
     <tr v-for="user in users" class="grid">
       <td class="col-1">{{ user.uid }}</td>
       <td class="col">{{ user.mail }}</td>
-      <td class="col">{{ user.name }}</td>
+      <td class="col"><router-link :to="`/profile/${user.uid}/`">{{ user.name }}</router-link></td>
       <td class="col-2">
         <select v-model="user.level">
           <option :value="0">Kernel</option>

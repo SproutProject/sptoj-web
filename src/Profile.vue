@@ -1,6 +1,7 @@
 <template>
 <div id="profile" class="grid" v-if="profile !== null">
   <div class="col-2"><div class="grid">
+    <div class="col-12"><h2>{{ profile.name }}</h2></div>
     <div class="col-12"><ul>
       <li><router-link to="/profile/">Profile</router-link>
       <li v-if="is_admin"><router-link to="/manage/group/">Manage</router-link>

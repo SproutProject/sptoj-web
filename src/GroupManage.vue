@@ -161,7 +161,7 @@ export default class GroupManage extends Vue {
     this.show_add_proitem = true
     let result = await API.listProblem()
     if (result !== 'Error') {
-      this.available_problems = result
+      this.available_problems = result.map(data => data.problem)
     }
   }
 
