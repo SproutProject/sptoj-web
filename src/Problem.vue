@@ -25,10 +25,15 @@
         </tr>
       </table>
     </div>
+    <div class="col-12"><div class="grid">
+      <div class="col-12"><input ref="file" type="file"/></div>
+      <div class="col-6"><button disabled>Editor</button></div>
+      <div class="col-6"><button @click="onSubmit">Submit</button></div>
+    </div></div>
     <div id="subtask" class="col-12">
       <table>
         <tr class="grid">
-          <th class="col">Subtask</th>
+          <th class="col">Task</th>
           <th class="col">Weight</th>
         </tr>
         <tr v-for="(weight, index) in problem.subtask" class="grid">
@@ -37,11 +42,18 @@
         </tr>
       </table>
     </div>
-    <div class="col-12"><div class="grid">
-      <div class="col-12"><input ref="file" type="file"/></div>
-      <div class="col-6"><button disabled>Editor</button></div>
-      <div class="col-6"><button @click="onSubmit">Submit</button></div>
-    </div></div>
+    <div id="rate" class="col-12" v-if="rates !== null">
+      <table>
+        <tr class="grid">
+          <th class="col">Task</th>
+          <th class="col">AC / Score</th>
+        </tr>
+        <tr v-for="(rate, index) in rates" class="grid">
+          <td class="col">{{ index + 1 }}</td>
+          <td class="col">{{ rate.count }} / {{ rate.score }}</td>
+        </tr>
+      </table>
+    </div>
   </div></div>
   <div class="col">
     <iframe id="content" :src="`/api/problem/${problem_uid}/static/`" scrolling="no" @load="resizeContent"/>
@@ -60,6 +72,7 @@ declare function iFrameResize(options: any): any
 export default class Problem extends Vue {
   problem_uid: number
   problem: API.Problem | null = null
+  rates: API.ProblemRate[] | null = null
 
   resizeContent() {
     iFrameResize({})
@@ -70,7 +83,10 @@ export default class Problem extends Vue {
     this.problem_uid = parseInt(this.$route.params['problem_uid'])
     let result = await API.getProblem(this.problem_uid)
     if (result !== 'Error') {
-      this.problem = result
+      this.problem = result.problem
+      if (result.rate !== undefined) {
+        this.rates = result.rate
+      }
     }
   }
 

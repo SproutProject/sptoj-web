@@ -15,6 +15,12 @@ export interface Problem {
   subtask: number[]
 }
 
+export interface ProblemRate {
+  index: number
+  count: number
+  score: number
+}
+
 export interface ProItem {
   uid: number
   hidden: boolean
@@ -144,8 +150,8 @@ export async function listProblem(): Promise<'Error' | Problem[]> {
   return await emit<'Error' | Problem[]>(`/problem/list`, {})
 }
 
-export async function getProblem(problem_uid: number): Promise<'Error' | Problem> {
-  return await emit<'Error' | Problem>(`/problem/${problem_uid}/get`, {})
+export async function getProblem(problem_uid: number): Promise<'Error' | { problem: Problem, rate?: ProblemRate[] }> {
+  return await emit<'Error' | { problem: Problem, rate?: ProblemRate[] }>(`/problem/${problem_uid}/get`, {})
 }
 
 export async function submit(problem_uid: number, code: string, lang: string): Promise<'Error' | number> {
@@ -159,10 +165,6 @@ export async function getChallenge(challenge_uid: number): Promise<'Error' | Cha
     challenge.timestamp = date.format('YYYY/MM/DD HH:mm:ss')
   }
   return challenge
-}
-
-export function getCategory(category: UserCategory): string {
-  return ''
 }
 
 export function getResult(state: JudgeState, result: number): string {
