@@ -3,6 +3,7 @@
   <table>
     <tr class="grid">
       <th class="col-1">#</th>
+      <th class="col">Mail</th>
       <th class="col">Name</th>
       <th class="col-2">Level</th>
       <th class="col-2">Category</th>
@@ -10,6 +11,7 @@
     </tr>
     <tr v-for="user in users" class="grid">
       <td class="col-1">{{ user.uid }}</td>
+      <td class="col">{{ user.mail }}</td>
       <td class="col">{{ user.name }}</td>
       <td class="col-2">
         <select v-model="user.level">
