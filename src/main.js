@@ -4,22 +4,22 @@ import 'babel-core/register'
 import 'babel-polyfill'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import FormInput from './components/FormInput.vue'
-import FormLabel from './components/FormLabel.vue'
-import * as API from './api.ts'
-import * as UserSrv from './user-service.ts'
-import App from './App.vue'
-import Index from './Index.vue'
-import Ingress from './Ingress.vue'
-import GroupBoard from './GroupBoard.vue'
-import Group from './Group.vue'
-import Problem from './Problem.vue'
-import Challenge from './Challenge.vue'
-import Profile from './Profile.vue'
-import Manage from './Manage.vue'
-import GroupManage from './GroupManage.vue'
-import ProblemManage from './ProblemManage.vue'
-import UserManage from './UserManage.vue'
+import FormInput from './components/FormInput'
+import FormLabel from './components/FormLabel'
+import * as API from './api'
+import * as UserSrv from './user-service'
+import App from './App'
+import Index from './Index'
+import Ingress from './Ingress'
+import GroupBoard from './GroupBoard'
+import Group from './Group'
+import Problem from './Problem'
+import Challenge from './Challenge'
+import Profile from './Profile'
+import Manage from './Manage'
+import GroupManage from './GroupManage'
+import ProblemManage from './ProblemManage'
+import UserManage from './UserManage'
 
 Vue.use(VueRouter)
 
@@ -39,7 +39,7 @@ const router = new VueRouter({
     },
     { path: '/problem/:problem_uid/:view?', component: Problem },
     { path: '/challenge/:challenge_uid/', component: Challenge },
-    { path: '/profile', component: Profile },
+    { path: '/profile/:user_uid?/', component: Profile },
     {
       path: '/manage',
       component: Manage,

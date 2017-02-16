@@ -11,11 +11,11 @@ export enum UserCategory {
 }
 
 export interface User {
-  uid: number,
-  name: string,
-  level: UserLevel,
-  category: UserCategory,
-  metadata: void,
+  uid: number
+  mail: string
+  name: string
+  level: UserLevel
+  category: UserCategory
 }
 
 export let login: boolean = false

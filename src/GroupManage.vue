@@ -72,8 +72,8 @@
 import * as Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import * as _ from 'lodash'
-import { UserCategory } from './user-service.ts'
-import * as API from './api.ts'
+import { UserCategory } from './user-service'
+import * as API from './api'
 
 @Component
 export default class GroupManage extends Vue {

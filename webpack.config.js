@@ -49,7 +49,8 @@ module.exports = {
   resolve: {
     alias: {
       'vue$': 'vue/dist/vue.common.js'
-    }
+    },
+    extensions: ['*', '.ts', '.js', '.vue']
   },
   devServer: {
     historyApiFallback: true,

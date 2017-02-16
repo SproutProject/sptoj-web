@@ -20,7 +20,7 @@
 <script lang="ts">
 import * as Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import * as UserSrv from './user-service.ts'
+import * as UserSrv from './user-service'
 
 @Component
 export default class App extends Vue {

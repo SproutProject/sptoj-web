@@ -3,6 +3,13 @@ import * as _ from 'lodash'
 import * as moment from 'moment-timezone'
 import { User, UserCategory } from './user-service'
 
+export interface Profile {
+  uid: number
+  name: string
+  category: UserCategory
+  rate?: number
+}
+
 export interface Problem {
   uid: number
   revision: string
@@ -62,6 +69,10 @@ export interface Challenge {
 export async function emit<T>(path: string, data = {}): Promise<T> {
   let result = await axios.post('/api' + path, data);
   return result.data as T
+}
+
+export async function getProfile(user_uid: number): Promise<'Error' | Profile> {
+  return await emit<'Error' | Profile>(`/user/${user_uid}/profile`, {})
 }
 
 export async function listUser(): Promise<'Error' | User[]> {
@@ -165,6 +176,15 @@ export async function getChallenge(challenge_uid: number): Promise<'Error' | Cha
     challenge.timestamp = date.format('YYYY/MM/DD HH:mm:ss')
   }
   return challenge
+}
+
+export function getCategory(category: UserCategory): string {
+  switch(category) {
+    case UserCategory.universe: return 'Universe'
+    case UserCategory.algo: return 'Algo'
+    case UserCategory.clang: return 'CLang'
+    case UserCategory.pylang: return 'PyLang'
+  }
 }
 
 export function getResult(state: JudgeState, result: number): string {

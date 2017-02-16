@@ -37,8 +37,8 @@
 <script lang="ts">
 import * as Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import * as API from './api.ts'
-import * as UserSrv from './user-service.ts'
+import * as UserSrv from './user-service'
+import * as API from './api'
 
 @Component
 export default class UserManage extends Vue {
