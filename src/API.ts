@@ -62,7 +62,7 @@ export interface Challenge {
   metadata: void
   submitter: User
   problem: Problem
-  subtasks: Subtask[]
+  subtasks?: Subtask[]
 }
 
 export async function emit<T>(path: string, data = {}): Promise<T> {
@@ -179,6 +179,19 @@ export async function getChallenge(challenge_uid: number): Promise<'Error' | Cha
     challenge.timestamp = date.format('YYYY/MM/DD HH:mm:ss')
   }
   return challenge
+}
+
+export async function listChallenge(): Promise<'Error' | (Challenge | null)[]> {
+  let challenges = await emit<'Error' | (Challenge | null)[]>(`/challenge/list`, {})
+  if (challenges !== 'Error') {
+    for (let challenge of challenges) {
+      if (challenge !== null) {
+        let date = moment(challenge.timestamp, moment.ISO_8601).tz(moment.tz.guess())
+        challenge.timestamp = date.format('YYYY/MM/DD HH:mm:ss')
+      }
+    }
+  }
+  return challenges
 }
 
 export function getCategory(category: UserCategory): string {

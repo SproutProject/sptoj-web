@@ -14,6 +14,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.52",
     "@types/moment-timezone": "^0.2.34",
+    "axios": "^0.15.3",
     "babel-core": "^6.0.0",
     "babel-loader": "^6.0.0",
     "babel-polyfill": "^6.22.0",

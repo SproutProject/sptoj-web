@@ -1,37 +1,39 @@
 <template>
 <div id="problem-manage" class="grid" v-if="items != null">
-  <div class="col-12"><div class="grid">
-    <div class="col-1">
-      <input type="text" placeholder="ID" v-model="add_problem_id"/>
+  <div class="col-12">
+    <div class="grid">
+      <div class="col-1">
+        <input type="text" placeholder="ID" v-model="add_problem_id"/>
+      </div>
+      <div class="col">
+        <input type="text" placeholder="Git Repository" v-model="add_problem_git"/>
+      </div>
+      <div class="col-1"><button @click="onAddProblem">Add</button></div>
     </div>
-    <div class="col">
-      <input type="text" placeholder="Git Repository" v-model="add_problem_git"/>
-    </div>
-    <div class="col-1"><button @click="onAddProblem">Add</button></div>
-  </div></div>
-  <div class="col-12"><table>
-    <tr class="grid">
-      <th class="col-1">#</th>
-      <th class="col-2">Name</th>
-      <th class="col">Revision</th>
-      <th class="col">Git Repository</th>
-      <th class="col-1"></th>
-    </tr>
-    <tr v-for="item in items" class="grid">
-      <td class="col-1">{{ item.problem.uid }}</td>
-      <td class="col-2"><router-link :to="`/problem/${item.problem.uid}/`">{{ item.problem.name }}</router-link></td>
-      <td class="col">
-        <input type="text" readonly :value="item.problem.revision"/>
-      </td>
-      <td class="col">
-        <input type="text" placeholder="Git Repository" v-model="item.git"/>
-      </td>
-       <td class="col-1"><div class="grid grid-noGutter">
-        <div class="col"><i class="fa fa-upload btn" role="button" @click="onUpdateProblem(item)"></i></div>
-        <div class="col"><i class="fa fa-trash-o btn" role="button" @click="onRemoveProblem(item)"></i></div>
-      </div></td>
-    </tr>
-  </table></div>
+    <table>
+      <tr class="grid">
+        <th class="col-1">#</th>
+        <th class="col-2">Name</th>
+        <th class="col">Revision</th>
+        <th class="col">Git Repository</th>
+        <th class="col-1"></th>
+      </tr>
+      <tr v-for="item in items" class="grid">
+        <td class="col-1">{{ item.problem.uid }}</td>
+        <td class="col-2"><router-link :to="`/problem/${item.problem.uid}/`">{{ item.problem.name }}</router-link></td>
+        <td class="col">
+          <input type="text" readonly :value="item.problem.revision"/>
+        </td>
+        <td class="col">
+          <input type="text" placeholder="Git Repository" v-model="item.git"/>
+        </td>
+        <td class="col-1"><div class="grid grid-noGutter">
+          <div class="col"><i class="fa fa-upload btn" role="button" @click="onUpdateProblem(item)"></i></div>
+          <div class="col"><i class="fa fa-trash-o btn" role="button" @click="onRemoveProblem(item)"></i></div>
+        </div></td>
+      </tr>
+    </table>
+  </div>
 </div>
 </template>
 
