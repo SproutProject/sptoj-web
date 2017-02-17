@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" integrity="sha256-t2/7smZfgrST4FS1DT0bs/KotCM74XlcqZN5Vu7xlrw=" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.5.9/iframeResizer.contentWindow.min.js" integrity="sha256-BtKuqGSEAxTj1nIhPRQhYFUSgChcLtKpZuO0vaToEGE=" crossorigin="anonymous"></script>
+<script src="https://npmcdn.com/pdfjs-dist/build/pdf.min.js"></script>
+
+<div id="content">Loading...</div>
+
+<script type="text/javascript">
+function load_pdf(url) {
+  let j_cont = $('#content');
+  j_cont.empty()
+
+  PDFJS.workerSrc = ' https://npmcdn.com/pdfjs-dist/build/pdf.worker.min.js'
+  PDFJS.getDocument(url).then(function(pdf) {
+    for(let i = 0; i < pdf.numPages; i++) {
+      pdf.getPage(i + 1).then(function(idx) { return function(page) {
+        let j_canvas = $('<canvas style="width:100%; margin-bottom:16px; display:block;"></canvas>')
+        let j_div = $('<div></div>')
+        let ctx = j_canvas[0].getContext('2d')
+        let offset
+        let viewport
+
+        j_cont.append(j_canvas)
+
+        offset = j_canvas.offset()
+        viewport = page.getViewport(j_canvas.width() / page.getViewport(1.0).width)
+
+        j_canvas.attr('width',viewport.width)
+        j_canvas.attr('height',viewport.height)
+
+        j_div.addClass('textlayer')
+        j_div.css('width',viewport.width)
+        j_div.css('height',viewport.height)
+        j_div.offset({'top':offset.top,'left':offset.left})
+
+        j_cont.append(j_div)
+
+        page.getTextContent().then(function(text) {
+          page.render({
+              'canvasContext':ctx,
+              'viewport':viewport
+          })
+        })
+      }}(i + 1));
+    }
+  })
+}
+
+window.iFrameResizer = {
+  messageCallback: function(problem_uid) {
+    let problem_url = '/api/problem/' + problem_uid + '/static/'
+
+    function loadContent() {
+      if (this.status === 404) {
+        load_pdf(problem_url + 'cont.pdf')
+      } else {
+        let e_content = document.getElementById('content')
+        e_content.innerHTML = this.responseText
+      }
+    }
+
+    let req = new XMLHttpRequest()
+    req.onload = loadContent
+    req.open('get', problem_url + 'cont.html')
+    req.send()
+  }
+}
+</script>

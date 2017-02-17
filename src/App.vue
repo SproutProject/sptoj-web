@@ -20,6 +20,7 @@
 <script lang="ts">
 import * as Vue from 'vue'
 import { Component } from 'vue-property-decorator'
+import { Route } from 'vue-router'
 import * as UserSrv from './user-service'
 
 @Component

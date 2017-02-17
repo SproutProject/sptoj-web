@@ -1,5 +1,5 @@
 <template>
-<div id="group-board" class="grid">
+<div id="group-board" class="grid" v-if="groups !== null">
   <div class="col-2"><ul>
     <li class="grid grid-noGutter" v-for="group in groups"><router-link :to="`/group/${group.uid}/`">{{ group.name }}</router-link></li>
   </ul></div>
@@ -9,19 +9,17 @@
 
 <script lang="ts">
 import * as Vue from 'vue'
-import { Route } from 'vue-router'
 import { Component } from 'vue-property-decorator'
 import * as API from './api.ts'
 
 @Component
 export default class GroupBoard extends Vue {
-  groups: API.ProSet[] = []
+  groups: API.ProSet[] | null = []
 
-  async beforeRouteEnter (to: Route, from: Route, next: Function) {
-    let result = await API.listProSet()
-    if (result !== 'Error') {
-      let groups = result;
-      next((vm: GroupBoard) => { vm.groups = groups })
+  async created() {
+    let groups = await API.listProSet()
+    if (groups !== 'Error') {
+      this.groups = groups
     }
   }
 }

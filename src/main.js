@@ -1,5 +1,4 @@
 import './styles/styles.less'
-import './hook.js'
 import 'babel-core/register'
 import 'babel-polyfill'
 import Vue from 'vue'

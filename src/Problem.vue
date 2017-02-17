@@ -56,7 +56,7 @@
     </div>
   </div></div>
   <div class="col">
-    <iframe id="content" :src="`/api/problem/${problem_uid}/static/`" scrolling="no" @load="resizeContent"/>
+    <iframe id="content" ref="content" :src="require('./assets/viewer.html')" scrolling="no" @load="onContentLoaded"></iframe>
   </div>
 </div>
 </template>
@@ -74,10 +74,6 @@ export default class Problem extends Vue {
   problem: API.Problem | null = null
   rates: API.ProblemRate[] | null = null
 
-  resizeContent() {
-    iFrameResize({})
-  }
-
   @Watch('$route')
   async fetchData() {
     this.problem_uid = parseInt(this.$route.params['problem_uid'])
@@ -92,6 +88,12 @@ export default class Problem extends Vue {
 
   async created() {
     await this.fetchData()
+  }
+
+  async onContentLoaded() {
+    iFrameResize({})
+    let e_content = this.$refs['content'] as any
+    e_content.iFrameResizer.sendMessage(this.problem_uid)
   }
 
   async onSubmit() {
