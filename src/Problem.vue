@@ -8,10 +8,6 @@
     <div id="information" class="col-12">
       <table>
         <tr class="grid">
-          <th class="col">Param</th>
-          <th class="col">Value</th>
-        </tr>
-        <tr class="grid">
           <td class="col">Language</td>
           <td class="col">{{ problem.lang }}</td>
         </tr>
@@ -26,8 +22,13 @@
       </table>
     </div>
     <div class="col-12"><div class="grid">
-      <div class="col-12"><input ref="file" type="file"/></div>
-      <div class="col-6"><button disabled>Editor</button></div>
+      <input ref="file" type="file" hidden @change="onChangeFile"/>
+      <div class="col-12"><select v-model="lang">
+        <option :value ="problem.lang">{{ problem.lang }}</option>
+      </select></div>
+      
+      <div class="col-12"><input type="text" readonly placeholder="No selected code" :value="source_file ? source_file.name : ''"/></div>
+      <div class="col-6"><button @click="$refs.file.click()">Browse</button></div>
       <div class="col-6"><button @click="onSubmit">Submit</button></div>
     </div></div>
     <div id="subtask" class="col-12">
@@ -73,6 +74,8 @@ export default class Problem extends Vue {
   problem_uid: number
   problem: API.Problem | null = null
   rates: API.ProblemRate[] | null = null
+  lang: string = ''
+  source_file: File | null = null
 
   @Watch('$route')
   async fetchData() {
@@ -83,6 +86,7 @@ export default class Problem extends Vue {
       if (result.rate !== undefined) {
         this.rates = result.rate
       }
+      this.lang = this.problem.lang
     }
   }
 
@@ -90,27 +94,35 @@ export default class Problem extends Vue {
     await this.fetchData()
   }
 
-  async onContentLoaded() {
+  onChangeFile() {
+    let e_file = this.$refs['file'] as HTMLInputElement | undefined
+    if (e_file === undefined) {
+      this.source_file = null
+    } else if (e_file.files === null || e_file.files.length === 0) {
+      this.source_file = null
+    } else {
+      this.source_file = e_file.files[0]
+    }
+  }
+
+  onContentLoaded() {
     iFrameResize({})
     let e_content = this.$refs['content'] as any
     e_content.iFrameResizer.sendMessage(this.problem_uid)
   }
 
   async onSubmit() {
-    let e_file = this.$refs['file'] as HTMLInputElement
-    if (e_file.files !== null) {
-      let file = e_file.files[0]
+    if (this.source_file !== null) {
       let reader = new FileReader()
-      if (file !== null && reader !== null) {
+      if (reader !== null) {
         reader.onload = async () => {
           let code: string = reader.result
-          let lang: string = 'g++'
-          let challenge_uid = await API.submit(this.problem_uid, code, lang)
+          let challenge_uid = await API.submit(this.problem_uid, code, this.lang)
           if (challenge_uid !== 'Error') {
             this.$router.push(`/challenge/${challenge_uid}/`)
           }
         }
-        reader.readAsText(file)
+        reader.readAsText(this.source_file)
       }
     }
   }
