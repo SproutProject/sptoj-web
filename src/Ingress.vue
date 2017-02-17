@@ -10,7 +10,7 @@
       <form-label class="col-3">Password</form-label>
     </form-input>
     <!-- Register -->
-    <form-input  class="col" type="password" required v-if="mode == 'register'" v-model="confirm">
+    <form-input class="col" type="password" required v-if="mode == 'register'" v-model="confirm">
       <form-label class="col-3">Confirm</form-label>
     </form-input>
     <form-input  class="col" type="text" required v-if="mode == 'register'" v-model="name">

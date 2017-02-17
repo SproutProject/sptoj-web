@@ -90,8 +90,8 @@ export async function listUser(): Promise<'Error' | User[]> {
   return await emit<'Error' | User[]>('/user/list', {})
 }
 
-export async function setUser(user: User): Promise<'Error' | 'Success'> {
-  return await emit<'Error' | 'Success'>(`/user/${user.uid}/set`, user)
+export async function setUser(data: { uid: number, name: string, password?: string, category?: UserCategory }): Promise<'Error' | 'Success'> {
+  return await emit<'Error' | 'Success'>(`/user/${data.uid}/set`, data)
 }
 
 export async function removeUser(user_uid: number): Promise<'Error' | 'Success'> {

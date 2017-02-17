@@ -15,7 +15,9 @@ import Group from './Group'
 import Problem from './Problem'
 import Status from './Status'
 import Challenge from './Challenge'
-import Profile from './Profile'
+import UserBoard from './UserBoard'
+import UserProfile from './UserProfile'
+import UserSetting from './UserSetting'
 import Manage from './Manage'
 import GroupManage from './GroupManage'
 import ProblemManage from './ProblemManage'
@@ -40,15 +42,21 @@ const router = new VueRouter({
     },
     { path: '/problem/:problem_uid/:view?', component: Problem },
     { path: '/challenge/:challenge_uid/', component: Challenge },
-    { path: '/profile/:user_uid?/', component: Profile },
+    { path: '/profile/',
+      component: UserBoard,
+      children: [
+        { path: 'setting/', component: UserSetting },
+        { path: ':user_uid/', component: UserProfile },
+      ]
+    },
     {
-      path: '/manage',
+      path: '/manage/',
       component: Manage,
       children: [
-        { path: 'group', component: GroupManage },
-        { path: 'group/:proset_uid', component: GroupManage },
-        { path: 'problem', component: ProblemManage},
-        { path: 'user', component: UserManage },
+        { path: 'group/', component: GroupManage },
+        { path: 'group/:proset_uid/', component: GroupManage },
+        { path: 'problem/', component: ProblemManage},
+        { path: 'user/', component: UserManage },
       ],
     },
   ]
