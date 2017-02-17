@@ -1,70 +1,69 @@
 <template>
 <div id="group-manage" class="grid">
-<div class="col-2">
-  <div class="grid">
-    <div class="col"><button @click="onCreateProSet">New Collection</button></div>
-  </div>
-  <ul>
-    <li v-for="proset in prosets" class="grid grid-noGutter">
-      <div class="col"><router-link :to="`/manage/group/${proset.uid}/`">{{ proset.name }}</router-link></div>
-      <div class="col-4"><div class="grid grid-noGutter">
-        <div class="col"><i class="fa btn" role="button" :class="proset.hidden ? 'fa-eye-slash' : 'fa-eye'" @click="onToggleProSetHidden(proset)"></i></div>
-        <div class="col"><i class="fa fa-trash-o btn" role="button" @click="onRemoveProSet(proset)"></i></div>
-      </div></div>
-    </li>
-  </ul>
-</div>
-<div class="col" v-if="current_proset !== null">
-  <div class="grid">
-    <div class="col"><input type="text" v-model="current_proset.name"/></div>
-    <div class="col-2">
-      <select v-model="current_proset.metadata.category">
-          <option :value="0">Universe</option>
-          <option :value="1">Algo</option>
-          <option :value="2">CLang</option>
-          <option :value="3">PyLang</option>
+  <div class="col-2"><div class="grid">
+    <div class="col-12"><button @click="onCreateProSet">New Collection</button></div>
+    <ul class="col-12">
+      <li v-for="proset in prosets" class="grid grid-noGutter">
+        <div class="col"><router-link :to="`/manage/group/${proset.uid}/`">{{ proset.name }}</router-link></div>
+        <div class="col-4"><div class="grid grid-noGutter">
+          <div class="col"><i class="fa btn" role="button" :class="proset.hidden ? 'fa-eye-slash' : 'fa-eye'" @click="onToggleProSetHidden(proset)"></i></div>
+          <div class="col"><i class="fa fa-trash-o btn" role="button" @click="onRemoveProSet(proset)"></i></div>
+        </div></div>
+      </li>
+    </ul>
+  </div></div>
+  <div class="col" v-if="current_proset !== null">
+    <div class="grid">
+      <div class="col"><input type="text" v-model="current_proset.name"/></div>
+      <div class="col-2">
+        <select v-model="current_proset.metadata.category">
+            <option :value="0">Universe</option>
+            <option :value="1">Algo</option>
+            <option :value="2">CLang</option>
+            <option :value="3">PyLang</option>
+          </select>
+        </div>
+      <div class="col-1"><button @click="onApplyProSet">Apply</button></div>
+      <div class="col-2"><button @click="onShowAddProItem">Add Problem</button></div>
+    </div>
+    <div class="grid" v-show="show_add_proitem">
+      <div class="col">
+        <select v-model="selected_problem">
+          <option v-for="problem in available_problems" :value="problem">{{ problem.name }}
         </select>
       </div>
-    <div class="col-1"><button @click="onApplyProSet">Apply</button></div>
-    <div class="col-2"><button @click="onShowAddProItem">Add Problem</button></div>
+      <div class="col-4">
+        <input type="text" placeholder="Deadline (1984/01/01+0800)" v-model="selected_deadline"/>
+      </div>
+      <div class="col-2">
+        <input type="text" placeholder="Section" v-model="selected_section"/>
+      </div>
+      <div class="col-1"><button @click="onAddProItem">Add</button></div>
+      <div class="col-2"><button @click="show_add_proitem = false">Cancel</button></div>
+    </div>
+    <table>
+      <tr class="grid">
+        <th class="col">Problem</th>
+        <th class="col-2">Deadline</th>
+        <th class="col-2">Section</th>
+        <th class="col-2"></th>
+      </tr>
+      <tr v-for="proitem in current_proitems" class="grid">
+        <td class="col"><router-link :to="`/problem/${proitem.problem.uid}/`">{{ proitem.problem.name }}</router-link></td>
+        <td class="col-2">
+          <input type="text" placeholder="No Deadline" v-model="proitem.deadline"/>
+        </td>
+        <td class="col-2">
+          <input type="text" placeholder="Section" v-model="proitem.metadata.section"/>
+        </td>
+        <td class="col-2"><div class="grid grid-noGutter">
+          <div class="col"><i class="fa fa-floppy-o btn" role="button" @click="onApplyProItem(proitem)"></i></div>
+          <div class="col"><i class="fa btn" role="button" :class="proitem.hidden ? 'fa-eye-slash' : 'fa-eye'" @click="onToggleProItemHidden(proitem)"></i></div>
+          <div class="col"><i class="fa fa-trash-o btn" role="button" @click="onRemoveProItem(proitem)"></i></div>
+        </div></td>
+      </tr>
+    </table>
   </div>
-  <div class="grid" v-show="show_add_proitem">
-    <div class="col">
-      <select v-model="selected_problem">
-        <option v-for="problem in available_problems" :value="problem">{{ problem.name }}
-      </select>
-    </div>
-    <div class="col-4">
-      <input type="text" placeholder="Deadline (1984/01/01+0800)" v-model="selected_deadline"/>
-    </div>
-    <div class="col-2">
-      <input type="text" placeholder="Section" v-model="selected_section"/>
-    </div>
-    <div class="col-1"><button @click="onAddProItem">Add</button></div>
-    <div class="col-2"><button @click="show_add_proitem = false">Cancel</button></div>
-  </div>
-  <table>
-    <tr class="grid">
-      <th class="col">Problem</th>
-      <th class="col-2">Deadline</th>
-      <th class="col-2">Section</th>
-      <th class="col-2"></th>
-    </tr>
-    <tr v-for="proitem in current_proitems" class="grid">
-      <td class="col"><router-link :to="`/problem/${proitem.problem.uid}/`">{{ proitem.problem.name }}</router-link></td>
-      <td class="col-2">
-        <input type="text" placeholder="No Deadline" v-model="proitem.deadline"/>
-      </td>
-      <td class="col-2">
-        <input type="text" placeholder="Section" v-model="proitem.metadata.section"/>
-      </td>
-      <td class="col-2"><div class="grid grid-noGutter">
-        <div class="col"><i class="fa fa-floppy-o btn" role="button" @click="onApplyProItem(proitem)"></i></div>
-        <div class="col"><i class="fa btn" role="button" :class="proitem.hidden ? 'fa-eye-slash' : 'fa-eye'" @click="onToggleProItemHidden(proitem)"></i></div>
-        <div class="col"><i class="fa fa-trash-o btn" role="button" @click="onRemoveProItem(proitem)"></i></div>
-      </div></td>
-    </tr>
-  </table>
 </div>
 </template>
 

@@ -102,7 +102,25 @@ table {
   border-collapse: collapse;
   display: block;
 
-  th, td {
+  > thead {
+    width: 100%;
+    display: block;
+
+    > tr:last-child > th {
+      border-bottom: solid 1px lightgray;
+    }
+  }
+
+  th {
+    height: 2rem;
+    line-height: 2rem;
+    font-weight: normal;
+    color: gray;
+    text-align: left;
+    display: block;
+  }
+
+  td {
     height: 2rem;
     line-height: 2rem;
     text-align: left;
@@ -128,8 +146,6 @@ div.form-input {
 }
 
 h2 {
-  height: 2rem;
-  line-height: 2rem;
   margin: 0;
 }
 
@@ -191,8 +207,4 @@ span.form-message {
       }
     }
   }
-}
-
-#view {
-  margin-top: 4rem;
 }

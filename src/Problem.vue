@@ -1,27 +1,25 @@
 <template>
 <div id="problem" class="grid" v-if="problem !== null">
-  <div class="col-2"><div class="grid">
-    <div id="title" class="col-12"><div class="grid">
-      <div class="col-1">{{ problem.uid }}.</div>
+  <div class="col-2"><div class="grid-1">
+    <div class="col"><div id="title" class="grid">
+      <div class="col-2">{{ problem.uid }}.</div>
       <div class="col">{{ problem.name }}</div>
     </div></div>
-    <div id="information" class="col-12">
-      <table>
-        <tr class="grid">
-          <td class="col">Language</td>
-          <td class="col">{{ problem.lang }}</td>
-        </tr>
-        <tr class="grid">
-          <td class="col">Timelimit</td>
-          <td class="col">{{ problem.timelimit }}</td>
-        </tr>
-        <tr class="grid">
-          <td class="col">Memlimit</td>
-          <td class="col">{{ problem.memlimit }}</td>
-        </tr>
-      </table>
-    </div>
-    <div class="col-12"><div class="grid">
+    <table class="col">
+      <tr class="grid">
+        <td class="col">Language</td>
+        <td class="col">{{ problem.lang }}</td>
+      </tr>
+      <tr class="grid">
+        <td class="col">Timelimit</td>
+        <td class="col">{{ problem.timelimit }}</td>
+      </tr>
+      <tr class="grid">
+        <td class="col">Memlimit</td>
+        <td class="col">{{ problem.memlimit }}</td>
+      </tr>
+    </table>
+    <div class="col grid">
       <input ref="file" type="file" hidden @change="onChangeFile"/>
       <div class="col-12"><select v-model="lang">
         <option :value ="problem.lang">{{ problem.lang }}</option>
@@ -30,31 +28,31 @@
       <div class="col-12"><input type="text" readonly placeholder="No selected code" :value="source_file ? source_file.name : ''"/></div>
       <div class="col-6"><button @click="$refs.file.click()">Browse</button></div>
       <div class="col-6"><button @click="onSubmit">Submit</button></div>
-    </div></div>
-    <div id="subtask" class="col-12">
-      <table>
+    </div>
+    <table class="col">
+      <thead>
         <tr class="grid">
           <th class="col">Task</th>
           <th class="col">Weight</th>
         </tr>
-        <tr v-for="(weight, index) in problem.subtask" class="grid">
-          <td class="col">{{ index + 1 }}</td>
-          <td class="col">{{ weight }}</td>
-        </tr>
-      </table>
-    </div>
-    <div id="rate" class="col-12" v-if="rates !== null">
-      <table>
+      </thead>
+      <tr v-for="(weight, index) in problem.subtask" class="grid">
+        <td class="col">{{ index + 1 }}</td>
+        <td class="col">{{ weight }}</td>
+      </tr>
+    </table>
+    <table class="col" v-if="rates !== null">
+      <thead>
         <tr class="grid">
           <th class="col">Task</th>
           <th class="col">AC / Score</th>
         </tr>
-        <tr v-for="(rate, index) in rates" class="grid">
-          <td class="col">{{ index + 1 }}</td>
-          <td class="col">{{ rate.count }} / {{ rate.score }}</td>
-        </tr>
-      </table>
-    </div>
+      </thead>
+      <tr v-for="(rate, index) in rates" class="grid">
+        <td class="col">{{ index + 1 }}</td>
+        <td class="col">{{ rate.count }} / {{ rate.score }}</td>
+      </tr>
+    </table>
   </div></div>
   <div class="col">
     <iframe id="content" ref="content" :src="require('./assets/viewer.html')" scrolling="no" @load="onContentLoaded"></iframe>

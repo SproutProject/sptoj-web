@@ -10,6 +10,14 @@ export interface Profile {
   rate?: number
 }
 
+interface TriedProblem {
+  [key: string]: { result: number }
+}
+
+export interface UserStatistic {
+  tried_problems: TriedProblem
+}
+
 export interface Problem {
   uid: number
   revision: string
@@ -72,6 +80,10 @@ export async function emit<T>(path: string, data = {}): Promise<T> {
 
 export async function getProfile(user_uid: number): Promise<'Error' | Profile> {
   return await emit<'Error' | Profile>(`/user/${user_uid}/profile`, {})
+}
+
+export async function getUserStatistic(user_uid: number): Promise<'Error' | UserStatistic> {
+  return await emit<'Error' | UserStatistic>(`/user/${user_uid}/statistic`, {})
 }
 
 export async function listUser(): Promise<'Error' | User[]> {
@@ -203,7 +215,7 @@ export function getCategory(category: UserCategory): string {
   }
 }
 
-export function getResult(state: JudgeState, result: number): string {
+export function getResult(state=JudgeState.done, result: number): string {
   switch (state) {
     case JudgeState.pending: return 'Pending'
     case JudgeState.judging: return 'Judging'

@@ -1,17 +1,19 @@
 <template>
 <div id="group" class="grid">
-  <div class="col"><table>
-    <tr class="grid">
-      <th class="col-1">ID</th>
-      <th class="col">Name</th>
-      <th class="col-2">Deadline</th>
-    </tr>
+  <table class="col">
+    <thead>
+      <tr class="grid">
+        <th class="col-1">#</th>
+        <th class="col">Name</th>
+        <th class="col-2">Deadline</th>
+      </tr>
+    </thead>
     <tr v-for="proitem in proitems" class="grid">
       <td class="col-1">{{ proitem.problem.uid }}</td>
       <td class="col"><router-link :to="`/problem/${proitem.problem.uid}/`">{{ proitem.problem.name }}</router-link></td>
       <td class="col-2">{{ proitem.deadline ? proitem.deadline : 'None' }}</td>
     </tr>
-  </table></div>
+  </table>
 </div>
 </template>
 

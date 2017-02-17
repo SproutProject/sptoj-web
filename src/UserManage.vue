@@ -1,6 +1,6 @@
 <template>
 <div id="user-manage" class="grid" v-if="users !== null">
-  <table>
+  <table class="col-12">
     <tr class="grid">
       <th class="col-1">#</th>
       <th class="col">Mail</th>

@@ -13,7 +13,7 @@ import Ingress from './Ingress'
 import GroupBoard from './GroupBoard'
 import Group from './Group'
 import Problem from './Problem'
-import ChallengeBoard from './ChallengeBoard'
+import Status from './Status'
 import Challenge from './Challenge'
 import Profile from './Profile'
 import Manage from './Manage'
@@ -27,14 +27,15 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { path: '/', component: Index },
-    { path: '/info', component: Index },
-    { path: '/status/:off?', component: ChallengeBoard },
-    { path: '/ingress', component: Ingress },
+    { path: '/info/', component: Index },
+    { path: '/rank/', component: Index },
+    { path: '/status/:off?', component: Status },
+    { path: '/ingress/', component: Ingress },
     {
-      path: '/group',
+      path: '/group/',
       component: GroupBoard,
       children: [
-        { path: ':proset_uid', component: Group },
+        { path: ':proset_uid/', component: Group },
       ],
     },
     { path: '/problem/:problem_uid/:view?', component: Problem },
