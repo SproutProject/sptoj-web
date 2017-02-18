@@ -1,6 +1,6 @@
 <template>
 <div id="ingress" class="grid">
-  <img id="poster" class="col-3" data-push-left="off-2">
+  <div id="poster" class="col-3" data-push-left="off-2"></div>
   <div class="col-4"><form class="grid-1" @submit.prevent="onSubmit">
     <!-- Login -->
     <form-input class="col" type="email" required v-model="mail">

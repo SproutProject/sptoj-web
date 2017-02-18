@@ -71,6 +71,7 @@ export interface Challenge {
   submitter: User
   problem: Problem
   subtasks?: Subtask[]
+  code?: string
 }
 
 export async function emit<T>(path: string, data = {}): Promise<T> {
