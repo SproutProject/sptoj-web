@@ -104,9 +104,14 @@ export default class Problem extends Vue {
   }
 
   onContentLoaded() {
-    iFrameResize({})
-    let e_content = this.$refs['content'] as any
-    e_content.iFrameResizer.sendMessage(this.problem_uid)
+    if (this.problem !== null) {
+      iFrameResize({})
+      let e_content = this.$refs['content'] as any
+      e_content.iFrameResizer.sendMessage({
+        problem_uid: this.problem.uid,
+        revision: this.problem.revision
+      })
+    }
   }
 
   async onSubmit() {

@@ -48,12 +48,14 @@ function load_pdf(url) {
 }
 
 window.iFrameResizer = {
-  messageCallback: function(problem_uid) {
+  messageCallback: function(data) {
+    let problem_uid = data.problem_uid
+    let revision = data.revision
     let problem_url = '/api/problem/' + problem_uid + '/static/'
 
     function loadContent() {
       if (this.status === 404) {
-        load_pdf(problem_url + 'cont.pdf')
+        load_pdf(problem_url + 'cont.pdf?rev=' + revision)
       } else {
         let e_content = document.getElementById('content')
         e_content.innerHTML = this.responseText
@@ -62,7 +64,7 @@ window.iFrameResizer = {
 
     let req = new XMLHttpRequest()
     req.onload = loadContent
-    req.open('get', problem_url + 'cont.html')
+    req.open('get', problem_url + 'cont.html?rev=' + revision)
     req.send()
   }
 }
