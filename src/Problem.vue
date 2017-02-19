@@ -61,7 +61,7 @@
     <div id="editor-box" v-show="show_editor">
       <div id="editor" style="font-size: 1.2rem;"></div>
     </div>
-    <div id="content-box">
+    <div id="content-box" :class="{ split: show_editor }">
       <iframe id="content" ref="content" :src="require('./assets/viewer.html')" scrolling="no" @load="onContentLoaded"></iframe>
     </div>
   </div>
@@ -182,9 +182,13 @@ export default class Problem extends Vue {
   float: left;
 }
 #content-box {
-  width: 50%;
+  width: 100%;
   padding: @gutter @gutter;
   float: left;
+
+  &.split {
+    width: 50%;
+  }
 }
 #split-line {
   height: 100%;
