@@ -120,13 +120,7 @@ export default class GroupManage extends Vue {
   async onCreateProSet() {
     let proset_uid = await API.createProSet('New Colle')
     if (proset_uid !== 'Error') {
-      let proset = await API.getProSet(proset_uid)
-      if (proset !== 'Error') {
-        proset.metadata = { category: UserCategory.universe }
-        if (await API.setProSet(proset) === 'Success') {
-          this.$router.push(`/manage/group/${proset_uid}/`)
-        }
-      }
+      this.$router.push(`/manage/group/${proset_uid}/`)
     }
   }
   
