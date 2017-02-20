@@ -19,7 +19,9 @@
     </table></div>
   </div>
   <div class="col">
+    <transition name="fade">
     <router-view :profile="profile"></router-view>
+    </transition>
   </div>
 </div>
 </template>

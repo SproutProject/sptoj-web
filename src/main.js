@@ -18,7 +18,7 @@ import Challenge from './Challenge'
 import UserBoard from './UserBoard'
 import UserProfile from './UserProfile'
 import UserSetting from './UserSetting'
-import Manage from './Manage'
+import ManageBoard from './ManageBoard'
 import GroupManage from './GroupManage'
 import ProblemManage from './ProblemManage'
 import UserManage from './UserManage'
@@ -51,7 +51,7 @@ const router = new VueRouter({
     },
     {
       path: '/manage/',
-      component: Manage,
+      component: ManageBoard,
       children: [
         { path: 'group/', component: GroupManage },
         { path: 'group/:proset_uid/', component: GroupManage },

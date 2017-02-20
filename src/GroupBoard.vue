@@ -3,7 +3,11 @@
   <ul class="col-2">
     <li v-for="group in groups"><router-link :to="`/group/${group.uid}/`">{{ group.name }}</router-link></li>
   </ul>
-  <div class="col"><router-view></router-view></div>
+  <div class="col">
+    <transition name="fade">
+    <router-view></router-view>
+    </transition>
+  </div>
 </div>
 </template>
 

@@ -55,8 +55,8 @@ export default class Status extends Vue {
 
 <style lang="less">
 div.forbidden {
-  height: 1.4rem;
-  margin: 0.3rem 0;
-  background-image: repeating-linear-gradient(-45deg, transparent, transparent 0.6rem, gray 0.6rem, gray 1rem);
+  height: 1.2rem;
+  margin: .4rem 0;
+  background-image: repeating-linear-gradient(-45deg, white, white 0.6rem, lightgray 0.6rem, lightgray 1rem);
 }
 </style>

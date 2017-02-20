@@ -17,7 +17,9 @@
     </div></div>
   </div>
   <div id="view"  class="container">
+    <transition name="fade">
     <router-view></router-view>
+    </transition>
   </div>
 </div>
 </template>

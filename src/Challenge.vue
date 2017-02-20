@@ -50,10 +50,10 @@
       </table>
     </div>
   </div>
-  <div class="grid">
+  <div class="grid" v-if="challenge.metadata['verdict'] !== ''">
     <div class="col"><pre><code class="nohighlight">{{ challenge.metadata['verdict'] }}</code></pre></div>
   </div>
-  <div class="grid">
+  <div class="grid" v-if="challenge.code !== undefined">
     <div class="col"><pre ref="code"><code>{{ challenge.code }}</code></pre></div>
   </div>
 </div>

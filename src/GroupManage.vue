@@ -1,8 +1,10 @@
 <template>
 <div id="group-manage" class="grid">
-  <div class="col-2"><div class="grid">
-    <div class="col-12"><button @click="onCreateProSet">New Collection</button></div>
-    <ul class="col-12">
+  <div class="col-2">
+    <div class="grid">
+      <div class="col"><button class="col" @click="onCreateProSet">New Collection</button></div>
+    </div>
+    <div class="grid"><ul class="col">
       <li v-for="proset in prosets" class="grid grid-noGutter">
         <div class="col"><router-link :to="`/manage/group/${proset.uid}/`">{{ proset.name }}</router-link></div>
         <div class="col-4"><div class="grid grid-noGutter">
@@ -10,8 +12,8 @@
           <div class="col"><i class="fa fa-trash-o btn" role="button" @click="onRemoveProSet(proset)"></i></div>
         </div></div>
       </li>
-    </ul>
-  </div></div>
+    </ul></div>
+  </div>
   <div class="col" v-if="current_proset !== null">
     <div class="grid">
       <div class="col"><input type="text" v-model="current_proset.name"/></div>
@@ -42,12 +44,14 @@
       <div class="col-2"><button @click="show_add_proitem = false">Cancel</button></div>
     </div>
     <table>
-      <tr class="grid">
-        <th class="col">Problem</th>
-        <th class="col-2">Deadline</th>
-        <th class="col-2">Section</th>
-        <th class="col-2"></th>
-      </tr>
+      <thead>
+        <tr class="grid">
+          <th class="col">Problem</th>
+          <th class="col-2">Deadline</th>
+          <th class="col-2">Section</th>
+          <th class="col-2"></th>
+        </tr>
+      </thead>
       <tr v-for="proitem in current_proitems" class="grid">
         <td class="col"><router-link :to="`/problem/${proitem.problem.uid}/`">{{ proitem.problem.name }}</router-link></td>
         <td class="col-2">

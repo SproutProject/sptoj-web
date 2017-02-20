@@ -1,5 +1,5 @@
 <template>
-<div id="group" class="grid">
+<div id="group" class="grid" v-if="proset !== null">
   <table class="col">
     <thead>
       <tr class="grid">
@@ -27,28 +27,41 @@ import * as API from './api'
 
 @Component
 export default class Group extends Vue {
-  proset: API.ProSet
-  proitems: API.ProItem[] = []
+  proset: API.ProSet | null = null
+  proitems: API.ProItem[] | null = null
   statistic: API.UserStatistic | null = null
 
   @Watch('$route')
   async fetchData() {
+    this.proset = null
+    this.proitems = null
+    this.statistic = null
+
     let proset_uid: number = parseInt(this.$route.params['proset_uid'])
-    let [proset, proitems] = await Promise.all([
-      API.getProSet(proset_uid),
-      API.listProItem(proset_uid),
-    ])
+    let proset: API.ProSet | 'Error'
+    let proitems: API.ProItem[] | 'Error'
+    let statistic: API.UserStatistic | 'Error' | null = null
+    if (UserSrv.identity === null) {
+      [proset, proitems] = await Promise.all([
+        API.getProSet(proset_uid),
+        API.listProItem(proset_uid),
+      ])
+    } else {
+      [proset, proitems, statistic] = await Promise.all([
+        API.getProSet(proset_uid),
+        API.listProItem(proset_uid),
+        API.getUserStatistic(UserSrv.identity.uid),
+      ])
+    }
+
     if (proset !== 'Error') {
       this.proset = proset
     }
     if (proitems !== 'Error') {
       this.proitems = proitems
     }
-    if (UserSrv.identity !== null) {
-      let statistic = await API.getUserStatistic(UserSrv.identity.uid)
-      if (statistic !== 'Error') {
-        this.statistic = statistic
-      }
+    if (statistic !== null && statistic !== 'Error') {
+      this.statistic = statistic
     }
   }
 

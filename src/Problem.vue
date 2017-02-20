@@ -1,11 +1,30 @@
 <template>
 <div id="problem" class="grid" v-if="problem !== null">
   <div class="col-2">
-    <div class="grid"><div id="title" class="col grid">
-      <div class="col-2">{{ problem.uid }}.</div>
-      <div class="col">{{ problem.name }}</div>
-    </div></div>
+    <div class="grid">
+      <div class="col">
+        <div id="title">No. {{ problem.uid }}</div>
+      </div>
+    </div>
+    <input ref="file" type="file" hidden @change="onChangeFile"/>
+    <div class="grid"><div class="col"><select v-model="lang">
+      <option :value ="problem.lang">{{ problem.lang }}</option>
+    </select></div></div>
+    <div class="grid">
+      <div class="col-3"><button @click="$refs.file.click()"><i class="fa fa-file-code-o" aria-hidden="true"></i></button></div>
+      <div class="col"><input type="text" readonly placeholder="No selected file" :value="source_file ? source_file.name : ''" @click="$refs.file.click()"/></div>
+    </div>
+    <div class="grid">
+      <div class="col-6"><button @click="onSubmit">Submit</button></div>
+      <div class="col-6"><button @click="onToggleEditor">Editor</button></div>
+    </div>
     <table>
+      <thead>
+        <tr class="grid">
+          <th class="col">Attribute</th>
+          <th class="col">Value</th>
+        </tr>
+      </thead>
       <tr class="grid">
         <td class="col">Language</td>
         <td class="col">{{ problem.lang }}</td>
@@ -19,18 +38,6 @@
         <td class="col">{{ problem.memlimit }}</td>
       </tr>
     </table>
-    <input ref="file" type="file" hidden @change="onChangeFile"/>
-    <div class="grid"><div class="col"><select v-model="lang">
-      <option :value ="problem.lang">{{ problem.lang }}</option>
-    </select></div></div>
-    <div class="grid">
-      <div class="col-3"><button @click="$refs.file.click()"><i class="fa fa-file-code-o" aria-hidden="true"></i></button></div>
-      <div class="col"><input type="text" readonly placeholder="No selected file" :value="source_file ? source_file.name : ''" @click="$refs.file.click()"/></div>
-    </div>
-    <div class="grid">
-      <div class="col-6"><button @click="onSubmit">Submit</button></div>
-      <div class="col-6"><button @click="onToggleEditor">Editor</button></div>
-    </div>
     <table>
       <thead>
         <tr class="grid">
@@ -169,11 +176,13 @@ export default class Problem extends Vue {
 @import "./styles/styles.less";
 
 #title {
-  > div {
-    height: 2rem;
-    line-height: 2rem;
-    font-size: 1.2rem;
-  }
+  height: 2rem;
+  line-height: 2rem;
+  margin: 0 -@gutter;
+  padding: 0 @gutter;
+  font-size: 1.5rem;
+  background-color: gray;
+  color: white;
 }
 #editor-box {
   height: 100%;

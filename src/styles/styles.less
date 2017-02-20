@@ -15,6 +15,14 @@
   }
 }
 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.1s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0
+}
+
 body {
   overflow-y: scroll;
 }
@@ -37,6 +45,7 @@ button {
 
   &:hover {
     background-color: gray;
+    color: white;
 
     &:before {
       content: "";
@@ -106,16 +115,19 @@ table {
     width: 100%;
     display: block;
 
-    > tr:last-child > th {
-      border-bottom: solid 1px lightgray;
+    > tr {
+      height: 2rem;
+      padding-top: .4rem;
+      padding-bottom: .4rem;
     }
   }
 
   th {
-    height: 2rem;
-    line-height: 2rem;
+    height: 1.2rem;
+    line-height: 1.2rem;
     font-weight: normal;
-    color: gray;
+    background-color: gray;
+    color: white;
     text-align: left;
     display: block;
   }
@@ -147,6 +159,10 @@ div.form-input {
 
 h2 {
   margin: 0;
+}
+
+pre {
+  margin: 0 0;
 }
 
 span.form-message {
