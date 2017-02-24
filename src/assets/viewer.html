@@ -3,8 +3,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.5.9/iframeResizer.contentWindow.min.js" integrity="sha256-BtKuqGSEAxTj1nIhPRQhYFUSgChcLtKpZuO0vaToEGE=" crossorigin="anonymous"></script>
 <script src="https://npmcdn.com/pdfjs-dist/build/pdf.min.js"></script>
+<script type="text/javascript" async src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
-<div id="content">Loading...</div>
+<div id="content" style="padding-bottom: 2rem;">Loading...</div>
 
 <script type="text/javascript">
 function load_pdf(url) {
@@ -59,6 +60,7 @@ window.iFrameResizer = {
       } else {
         let e_content = document.getElementById('content')
         e_content.innerHTML = this.responseText
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, e_content]);
       }
     }
 

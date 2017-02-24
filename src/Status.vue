@@ -1,6 +1,5 @@
 <template>
 <div id="status" class="grid" v-if="challenges !== null">
-  <div class="col-2"></div>
   <table class="col">
     <thead>
       <tr class="grid">

@@ -12,14 +12,14 @@
   <table class="col-12">
     <tr class="grid">
       <th class="col-1">#</th>
-      <th class="col-2">Name</th>
+      <th class="col-4">Name</th>
       <th class="col">Revision</th>
       <th class="col">Git Repository</th>
       <th class="col-1"></th>
     </tr>
     <tr v-for="item in items" class="grid">
       <td class="col-1">{{ item.problem.uid }}</td>
-      <td class="col-2"><router-link :to="`/problem/${item.problem.uid}/`">{{ item.problem.name }}</router-link></td>
+      <td class="col-4"><router-link :to="`/problem/${item.problem.uid}/`">{{ item.problem.name }}</router-link></td>
       <td class="col">
         <input type="text" readonly :value="item.problem.revision"/>
       </td>

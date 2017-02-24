@@ -4,6 +4,7 @@
     "sourceMap": false,
     "noImplicitAny": true,
     "strictNullChecks": true,
+    "skipLibCheck": true,
     "moduleResolution": "node",
     "target": "es6",
     "module": "es6",
