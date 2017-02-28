@@ -3,9 +3,8 @@
   <div class="col-2">
     <div class="grid-1"><h2 class="col">{{ profile.name }}</h2></div>
     <div class="grid-1"><ul class="col">
-      <li><router-link :to="`/profile/${profile.uid}/`">Profile</router-link>
-      <li><router-link to="/profile/setting" v-if="identity !== null && profile.uid === identity.uid">Settings</router-link>
-      <li v-if="is_admin"><router-link to="/manage/group/">Manage</router-link>
+      <li><router-link :to="`/profile/${profile.uid}/`">Profile</router-link></li>
+      <li><router-link to="/profile/setting" v-if="identity !== null && profile.uid === identity.uid">Settings</router-link></li>
     </ul></div>
     <div class="grid-1"><table class="col">
       <tr class="grid">
@@ -55,16 +54,6 @@ export default class UserBoard extends Vue {
 
   async created() {
     await this.fetchData()
-  }
-
-  get is_admin(): boolean {
-    if (this.identity === null || this.profile === null) {
-      return false
-    } else if(this.identity.uid !== this.profile.uid ) {
-      return false
-    } else {
-      return this.identity.level <= UserSrv.UserLevel.kernel
-    }
   }
 
   getCategory(category: UserSrv.UserCategory): string {

@@ -187,12 +187,12 @@ export default class Problem extends Vue {
 #editor-box {
   height: 100%;
   width: 50%;
-  padding: @gutter @gutter;
+  padding: 0 @gutter;
   float: left;
 }
 #content-box {
   width: 100%;
-  padding: @gutter @gutter;
+  padding: 0 @gutter;
   float: left;
 
   &.split {

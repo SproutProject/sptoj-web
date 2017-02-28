@@ -3,6 +3,15 @@
 @gutter: @gl-gutter / 2;
 @zebra: repeating-linear-gradient(-45deg, transparent, transparent 1px, rgba(0,0,0,1) 1px, rgba(0,0,0,1) 2px);
 
+.fixed-height(@height) {
+  height: @height;
+  line-height: @height;
+
+  &[class*="col"] {
+    padding-bottom: 0;
+  }
+}
+
 * {
   // Set default styles.
   box-sizing: border-box;
@@ -123,8 +132,7 @@ table {
   }
 
   th {
-    height: 1.2rem;
-    line-height: 1.2rem;
+    .fixed-height(1.2rem);
     font-weight: normal;
     background-color: gray;
     color: white;
@@ -133,9 +141,9 @@ table {
   }
 
   td {
-    height: 2rem;
-    line-height: 2rem;
+    .fixed-height(2rem);
     text-align: left;
+    overflow: hidden;
     display: block;
   }
 }
@@ -146,14 +154,16 @@ div.container {
 }
 
 div.form-input {
-  height: 2rem;
-  line-height: 2rem;
-  
-  label.form-label {
-    height: 2rem;
-    width: 100%;
-    border-bottom: solid 1px black;
-    display: block;
+  > div {
+    .fixed-height(2rem);
+
+    label.form-label {
+      height: 2rem;
+      line-height: 2rem;
+      width: 100%;
+      border-bottom: solid 1px black;
+      display: block;
+    }
   }
 }
 
@@ -172,22 +182,21 @@ span.form-message {
 }
 
 #navbar {
-  height: 2rem;
-  line-height: 2rem;
+  .fixed-height(2rem);
   width: 100%;
   background-color: white;
   border-bottom: solid 1px lightgray;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 100;
 
   a.logo {
-    height: 2rem;
+    .fixed-height(2rem);
   }
 
   a.link {
-    height: 2rem;
+    .fixed-height(2rem);
     color: black;
     text-align: center;
 

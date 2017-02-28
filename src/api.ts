@@ -3,6 +3,11 @@ import * as _ from 'lodash'
 import * as moment from 'moment-timezone'
 import { User, UserCategory } from './user-service'
 
+export interface PartialList<T> {
+  data: T[]
+  count: number
+}
+
 export interface Profile {
   uid: number
   name: string
@@ -194,17 +199,17 @@ export async function getChallenge(challenge_uid: number): Promise<'Error' | Cha
   return challenge
 }
 
-export async function listChallenge(): Promise<'Error' | (Challenge | null)[]> {
-  let challenges = await emit<'Error' | (Challenge | null)[]>(`/challenge/list`, {})
-  if (challenges !== 'Error') {
-    for (let challenge of challenges) {
+export async function listChallenge(offset: number): Promise<'Error' | (PartialList<Challenge | null>)> {
+  let partial_list = await emit<'Error' | (PartialList<Challenge | null>)>(`/challenge/list`, { offset })
+  if (partial_list !== 'Error') {
+    for (let challenge of partial_list.data) {
       if (challenge !== null) {
         let date = moment(challenge.timestamp, moment.ISO_8601).tz(moment.tz.guess())
         challenge.timestamp = date.format('YYYY/MM/DD HH:mm:ss')
       }
     }
   }
-  return challenges
+  return partial_list
 }
 
 export function getCategory(category: UserCategory): string {

@@ -57,8 +57,8 @@ module.exports = {
     noInfo: true,
     proxy: {
       '/api': {
-        // target: 'http://188.166.236.255'
-        target: 'http://neoj.sprout.tw'
+        target: 'http://188.166.236.255'
+        // target: 'http://neoj.sprout.tw'
       }
     }
   },
