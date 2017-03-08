@@ -1,5 +1,23 @@
 <template>
 <div id="status" v-if="tables !== null">
+  <div class="grid filter">
+    <div class="col-1"><div class="title">Filter</div></div>
+    <div class="col-2"><input type="text" placeholder="Submitter ID" v-model.number="filter.user_uid" /></div>
+    <div class="col-3"><input type="text" placeholder="Problem ID" v-model.number="filter.problem_uid" /></div>
+    <div class="col-2">
+      <select v-model.number="filter.result">
+        <option :value="null">Any</option>
+        <option :value="1">Accepted</option>
+        <option :value="2">Wrong Answer</option>
+        <option :value="3">Runtime Error</option>
+        <option :value="4">Time Limit Exceeded</option>
+        <option :value="5">Memory Limit Exceeded</option>
+        <option :value="6">Compile Error</option>
+        <option :value="7">Other</option>
+      </select>
+    </div>
+    <div class="col-1"><button @click="onApplyFilter">Apply</button></div>
+  </div>
   <div class="grid" v-for="(table, index) in tables" :ref="`table_${index}`">
     <table class="col challenge-table">
       <thead>
@@ -45,14 +63,21 @@ class ChallengeTable {
 
 @Component
 export default class Status extends Vue {
+  filter: API.ChallengeFilter = new API.ChallengeFilter()
+  query_filter: API.ChallengeFilter = new API.ChallengeFilter()
   total_count: number = 0
   tables: ChallengeTable[] | null = null
   pending_scroll: number | null = null
 
-  // challenges: (API.Challenge | null)[] | null = null
+  @Watch('$route')
+  async fetchData() {
+    let query = this.$route.query['filter']
+    if (query !== undefined) {
+      this.filter.load(query)
+      this.query_filter.load(query)
+    }
 
-  async created() {
-    let partial_list = await API.listChallenge(0)
+    let partial_list = await API.listChallenge(0, this.query_filter)
     if (partial_list !== 'Error') {
       this.total_count = partial_list.count
       
@@ -70,12 +95,20 @@ export default class Status extends Vue {
 
       this.$nextTick(this.update)
     }
+  }
+
+  async created() {
+    await this.fetchData()
 
     window.addEventListener('scroll', this.onScroll)
   }
 
   destroyed() {
     window.removeEventListener('scroll', this.onScroll)
+  }
+  
+  onApplyFilter() {
+    this.$router.push({ name: 'status', query: { filter: this.filter.serialize() } })
   }
 
   async onScroll() {
@@ -111,7 +144,7 @@ export default class Status extends Vue {
         let table = this.tables[idx]
         if (!table.load) {
           table.load = true
-          API.listChallenge(table.offset).then((partial_list: 'Error' | API.PartialList<API.Challenge | null>) => {
+          API.listChallenge(table.offset, this.query_filter).then((partial_list: 'Error' | API.PartialList<API.Challenge | null>) => {
             if (partial_list !== 'Error') {
               table.challenges = partial_list.data.slice(0, table.length).reverse()
               if (this.tables !== null) {
@@ -132,6 +165,15 @@ export default class Status extends Vue {
 
 <style lang="less">
 @import "./styles/styles.less";
+
+div.filter {
+  div.title {
+    line-height: 2rem;
+    background-color: black;
+    color: white;
+    text-align: center;
+  }
+}
 
 table.challenge-table {
   min-height: 2rem * 101 + @gutter * 2;

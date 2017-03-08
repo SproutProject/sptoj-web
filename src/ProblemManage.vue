@@ -27,6 +27,7 @@
         <input type="text" placeholder="Git Repository" v-model="item.git"/>
       </td>
       <td class="col-1"><div class="grid grid-noGutter">
+        <div class="col"><i class="fa fa-refresh btn" role="button" @click="onRejudgeProblem(item)"></i></div>
         <div class="col"><i class="fa fa-upload btn" role="button" @click="onUpdateProblem(item)"></i></div>
         <div class="col"><i class="fa fa-trash-o btn" role="button" @click="onRemoveProblem(item)"></i></div>
       </div></td>
@@ -63,6 +64,10 @@ export default class ProblemManage extends Vue {
     if (await API.updateProblem(parseInt(this.add_problem_id), this.add_problem_git) === 'Success') {
       await this.fetchData()
     }
+  }
+
+  async onRejudgeProblem(item: Item) {
+    
   }
 
   async onUpdateProblem(item: Item) {

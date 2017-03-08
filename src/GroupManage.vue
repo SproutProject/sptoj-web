@@ -31,7 +31,7 @@
     <div class="grid" v-show="show_add_proitem">
       <div class="col">
         <select v-model="selected_problem">
-          <option v-for="problem in available_problems" :value="problem">{{ `${problem.uid} - ${problem.name}` }}
+          <option v-for="problem in available_problems" :value="problem">{{ `${problem.uid} - ${problem.name}` }}</option>
         </select>
       </div>
       <div class="col-4">

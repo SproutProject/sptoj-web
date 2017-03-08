@@ -79,6 +79,29 @@ export interface Challenge {
   code?: string
 }
 
+export class ChallengeFilter {
+  user_uid: number | null | '' = null
+  problem_uid: number | null | '' = null
+  result: number | null = null
+
+  load(data: string) {
+    let obj = JSON.parse(data)
+    this.user_uid = obj['user_uid']
+    this.problem_uid = obj['problem_uid']
+    this.result = obj['result']
+  }
+
+  serialize(): string {
+    if (this.user_uid === '') {
+      this.user_uid = null
+    }
+    if (this.problem_uid === '') {
+      this.problem_uid = null
+    }
+    return JSON.stringify(this)
+  }
+}
+
 export async function emit<T>(path: string, data = {}): Promise<T> {
   let result = await axios.post('/api' + path, data);
   return result.data as T
@@ -190,6 +213,10 @@ export async function submit(problem_uid: number, code: string, lang: string): P
   return await emit<'Error' | number>(`/problem/${problem_uid}/submit`, { code, lang })
 }
 
+export async function rejudgeChallenge(problem_uid: number): Promise<'Error' | 'Success'> {
+  return 'Success'
+}
+
 export async function getChallenge(challenge_uid: number): Promise<'Error' | Challenge> {
   let challenge = await emit<'Error' | Challenge>(`/challenge/${challenge_uid}/get`, {})
   if (challenge !== 'Error') {
@@ -199,8 +226,8 @@ export async function getChallenge(challenge_uid: number): Promise<'Error' | Cha
   return challenge
 }
 
-export async function listChallenge(offset: number): Promise<'Error' | (PartialList<Challenge | null>)> {
-  let partial_list = await emit<'Error' | (PartialList<Challenge | null>)>(`/challenge/list`, { offset })
+export async function listChallenge(offset: number, filter: ChallengeFilter | null = null): Promise<'Error' | (PartialList<Challenge | null>)> {
+  let partial_list = await emit<'Error' | (PartialList<Challenge | null>)>(`/challenge/list`, { offset, filter })
   if (partial_list !== 'Error') {
     for (let challenge of partial_list.data) {
       if (challenge !== null) {

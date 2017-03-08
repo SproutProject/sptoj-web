@@ -31,7 +31,7 @@ const router = new VueRouter({
     { path: '/', component: Index },
     { path: '/info/', component: Index },
     { path: '/rank/', component: Index },
-    { path: '/status/:off?', component: Status },
+    { name: 'status', path: '/status/:off?', component: Status },
     { path: '/ingress/', component: Ingress },
     {
       path: '/group/',
