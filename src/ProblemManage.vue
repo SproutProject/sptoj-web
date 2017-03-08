@@ -67,7 +67,7 @@ export default class ProblemManage extends Vue {
   }
 
   async onRejudgeProblem(item: Item) {
-    
+    await API.rejudgeChallenge(item.problem.uid)
   }
 
   async onUpdateProblem(item: Item) {

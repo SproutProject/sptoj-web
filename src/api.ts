@@ -214,7 +214,7 @@ export async function submit(problem_uid: number, code: string, lang: string): P
 }
 
 export async function rejudgeChallenge(problem_uid: number): Promise<'Error' | 'Success'> {
-  return 'Success'
+  return await emit<'Error' | 'Success'>(`/challenge/rejudge`, { problem_uid })
 }
 
 export async function getChallenge(challenge_uid: number): Promise<'Error' | Challenge> {
