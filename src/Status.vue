@@ -17,6 +17,7 @@
       </select>
     </div>
     <div class="col-1"><button @click="onApplyFilter">Apply</button></div>
+    <div class="col-1"><button @click="onClearFilter">Clear</button></div>
   </div>
   <div class="grid" v-for="(table, index) in tables" :ref="`table_${index}`">
     <table class="col challenge-table">
@@ -109,6 +110,10 @@ export default class Status extends Vue {
   
   onApplyFilter() {
     this.$router.push({ name: 'status', query: { filter: this.filter.serialize() } })
+  }
+
+  onClearFilter() {
+    this.$router.push({ name: 'status' })
   }
 
   async onScroll() {
