@@ -14,6 +14,7 @@ import GroupBoard from './GroupBoard'
 import Group from './Group'
 import Problem from './Problem'
 import Status from './Status'
+import Rank from './Rank'
 import Challenge from './Challenge'
 import UserBoard from './UserBoard'
 import UserProfile from './UserProfile'
@@ -30,7 +31,7 @@ const router = new VueRouter({
   routes: [
     { path: '/', component: Index },
     { path: '/info/', component: Index },
-    { path: '/rank/', component: Index },
+    { path: '/rank/', component: Rank },
     { name: 'status', path: '/status/:off?', component: Status },
     { path: '/ingress/', component: Ingress },
     {

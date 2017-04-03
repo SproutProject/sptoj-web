@@ -69,7 +69,7 @@ declare var hljs: any
 @Component
 export default class Challenge extends Vue {
   challenge: API.Challenge | null = null
-  
+
   @Watch('$route')
   async fetchData() {
     let challenge_uid = parseInt(this.$route.params['challenge_uid'])

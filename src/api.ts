@@ -52,7 +52,7 @@ export interface ProSet {
   uid: number
   name: string
   hidden: boolean
-  metadata: { category?: number }
+  metadata: { category: number }
 }
 
 export enum JudgeState {
@@ -66,6 +66,17 @@ export interface Subtask {
   index: number
   state: JudgeState
   metadata: void
+}
+
+export interface Ranker {
+  profile: Profile
+  rate: number
+  results: { [key: number]: number }
+}
+
+export interface Rank {
+  problems: number[]
+  rankders: Ranker[]
 }
 
 export interface Challenge {
@@ -237,6 +248,10 @@ export async function listChallenge(offset: number, filter: ChallengeFilter | nu
     }
   }
   return partial_list
+}
+
+export async function getRank(proset_uid: number): Promise<'Error' | Rank> {
+  return await emit<'Error' | Rank>(`/rank/${proset_uid}/list`, {})
 }
 
 export function getCategory(category: UserCategory): string {
