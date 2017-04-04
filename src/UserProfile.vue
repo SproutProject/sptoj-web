@@ -36,7 +36,7 @@ export default class UserProfile extends Vue {
     if (statistic !== 'Error') {
       let tried_problems = statistic.tried_problems
       this.tried_problems = Object.keys(tried_problems).map((key: string) => {
-        return { uid: parseInt(key), result: API.getResult(undefined, tried_problems[key].result) }
+        return { uid: parseInt(key), result: API.getResult(API.JudgeState.done, tried_problems[key].result) }
       })
     }
   }

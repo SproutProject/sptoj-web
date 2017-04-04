@@ -77,7 +77,7 @@ export default class Group extends Vue {
     if (item === undefined) { 
       return ''
     }
-    return API.getResult(undefined, item.result)
+    return API.getResult(API.JudgeState.done, item.result)
   }
 }
 </script>

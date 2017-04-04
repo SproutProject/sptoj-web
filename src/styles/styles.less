@@ -128,7 +128,13 @@ table {
       height: 2rem;
       padding-top: .4rem;
       padding-bottom: .4rem;
+      display: block;
     }
+  }
+
+  > tbody {
+    width: 100%;
+    display: block;
   }
 
   th {
@@ -138,6 +144,7 @@ table {
     color: white;
     text-align: left;
     display: block;
+    float: left;
   }
 
   td {
@@ -145,6 +152,11 @@ table {
     text-align: left;
     overflow: hidden;
     display: block;
+    float: left;
+  }
+
+  th:not(:last-child), td:not(:last-child) {
+    border-right: solid 1px lightgray;
   }
 }
 

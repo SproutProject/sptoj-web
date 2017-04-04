@@ -74,11 +74,6 @@ export interface Ranker {
   results: { [key: number]: number }
 }
 
-export interface Rank {
-  problems: number[]
-  rankders: Ranker[]
-}
-
 export interface Challenge {
   uid: number
   state: JudgeState
@@ -250,8 +245,8 @@ export async function listChallenge(offset: number, filter: ChallengeFilter | nu
   return partial_list
 }
 
-export async function getRank(proset_uid: number): Promise<'Error' | Rank> {
-  return await emit<'Error' | Rank>(`/rank/${proset_uid}/list`, {})
+export async function getRank(proset_uid: number): Promise<'Error' | Ranker[]> {
+  return await emit<'Error' | Ranker[]>(`/rank/${proset_uid}/list`, {})
 }
 
 export function getCategory(category: UserCategory): string {
@@ -263,19 +258,38 @@ export function getCategory(category: UserCategory): string {
   }
 }
 
-export function getResult(state=JudgeState.done, result: number): string {
-  switch (state) {
-    case JudgeState.pending: return 'Pending'
-    case JudgeState.judging: return 'Judging'
-    case JudgeState.done:
-      switch (result) {
-        case 1: return 'Accepted'
-        case 2: return 'Wrong Answer'
-        case 3: return 'Runtime Error'
-        case 4: return 'Time Limit Exceeded'
-        case 5: return 'Memory Limit Exceeded'
-        case 6: return 'Compile Error'
-        default: return 'Other'
-      }
+export function getResult(state: JudgeState, result: number, abbreviation=false): string {
+  if (abbreviation) {
+    switch (state) {
+      case JudgeState.pending: return 'PD'
+      case JudgeState.judging: return 'JD'
+      case JudgeState.done:
+        switch (result) {
+          case 1: return 'AC'
+          case 2: return 'WA'
+          case 3: return 'RE'
+          case 4: return 'TLE'
+          case 5: return 'MLE'
+          case 6: return 'CE'
+          default: return 'OTH'
+        }
+      default: return 'UNK'
+    }
+  } else {
+    switch (state) {
+      case JudgeState.pending: return 'Pending'
+      case JudgeState.judging: return 'Judging'
+      case JudgeState.done:
+        switch (result) {
+          case 1: return 'Accepted'
+          case 2: return 'Wrong Answer'
+          case 3: return 'Runtime Error'
+          case 4: return 'Time Limit Exceeded'
+          case 5: return 'Memory Limit Exceeded'
+          case 6: return 'Compile Error'
+          default: return 'Other'
+        }
+      default: return 'Unknown'
+    }
   }
 }
