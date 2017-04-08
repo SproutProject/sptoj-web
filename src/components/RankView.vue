@@ -10,7 +10,7 @@
       </thead>
       <tbody>
         <tr class="grid" v-for="ranker in rankers">
-          <td class="col">{{ ranker.profile.name }}</td>
+          <td class="col"><router-link :to="`/profile/${ranker.profile.uid}/`">{{ ranker.profile.name }}</router-link></td>
           <td class="col">{{ ranker.rate }}</td>
         </tr>
       </tbody>
@@ -19,7 +19,7 @@
       <table :style="{ width: proitems.length * 60 + 'px' }">
         <thead>
           <tr>
-            <th v-for="proitem in proitems">{{ proitem.problem.uid }}</th>
+            <th v-for="proitem in proitems"><router-link :to="`/problem/${proitem.problem.uid}/`">{{ proitem.problem.uid }}</router-link></th>
           </tr>
         </thead>
         <tr v-for="ranker in rankers">
