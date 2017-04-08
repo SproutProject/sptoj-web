@@ -178,8 +178,7 @@ div.form-input {
     .fixed-height(2rem);
 
     label.form-label {
-      height: 2rem;
-      line-height: 2rem;
+      .fixed-height(2rem);
       width: 100%;
       border-bottom: solid 1px black;
       display: block;
@@ -195,9 +194,16 @@ pre {
   margin: 0 0;
 }
 
+span.brick {
+  .fixed-height(2rem);
+  width: 100%;
+  background-color: lightgray;
+  text-align: center;
+  display: block;
+}
+
 span.form-message {
-  height: 2rem;
-  line-height: 2rem;
+  .fixed-height(2rem);
   text-align: center;
 }
 

@@ -62,6 +62,14 @@
         <td class="col">{{ rate.count }} / {{ rate.score }}</td>
       </tr>
     </table>
+    <div class="grid-noGutter">
+      <div class="col-6" data-push-left="off-6"><select v-model="rate_category" @change="fetchRate">
+        <option :value="0">&#x21b3; Universe</option>
+        <option :value="1">&#x21b3; Algo</option>
+        <option :value="2">&#x21b3; CLang</option>
+        <option :value="3">&#x21b3; PyLang</option>
+      </select></div>
+    </div>
   </div>
   <div class="col">
     <div id="split-line" v-show="show_editor"></div>
@@ -79,6 +87,7 @@
 import * as Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import * as API from './api'
+import * as UserSrv from './user-service'
 
 declare var ace: any
 declare function iFrameResize(options: any): any
@@ -86,24 +95,39 @@ declare function iFrameResize(options: any): any
 @Component
 export default class Problem extends Vue {
   show_editor: boolean = false;
+  identity: UserSrv.User | null = UserSrv.identity
   problem_uid: number
   problem: API.Problem | null = null
+  rate_category: UserSrv.UserCategory
   rates: API.ProblemRate[] | null = null
   lang: string = ''
   source_file: File | null = null
   code: string | null = null
-  editor: any;
+  editor: any
 
   @Watch('$route')
   async fetchData() {
     this.problem_uid = parseInt(this.$route.params['problem_uid'])
     let result = await API.getProblem(this.problem_uid)
     if (result !== 'Error') {
-      this.problem = result.problem
-      if (result.rate !== undefined) {
-        this.rates = result.rate
-      }
+      this.problem = result
       this.lang = this.problem.lang
+
+      if (this.identity !== null) {
+        this.rate_category = this.identity.category
+      } else {
+        this.rate_category = UserSrv.UserCategory.universe
+      }
+      await this.fetchRate()
+    }
+  }
+
+  async fetchRate() {
+    let result = await API.getProblemRate(this.problem_uid, this.rate_category)
+    if (result === 'Error') {
+      this.rates = []
+    } else {
+      this.rates = result
     }
   }
 

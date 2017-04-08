@@ -211,8 +211,12 @@ export async function listProblem(): Promise<'Error' | { problem: Problem, git: 
   return await emit<'Error' | { problem: Problem, git: string }[]>(`/problem/list`, {})
 }
 
-export async function getProblem(problem_uid: number): Promise<'Error' | { problem: Problem, rate?: ProblemRate[] }> {
-  return await emit<'Error' | { problem: Problem, rate?: ProblemRate[] }>(`/problem/${problem_uid}/get`, {})
+export async function getProblem(problem_uid: number): Promise<'Error' | Problem> {
+  return await emit<'Error' | Problem>(`/problem/${problem_uid}/get`, {})
+}
+
+export async function getProblemRate(problem_uid: number, category: UserCategory): Promise<'Error' | ProblemRate[]> {
+  return await emit<'Error' | ProblemRate[]>(`/problem/${problem_uid}/rate`, { category })
 }
 
 export async function submit(problem_uid: number, code: string, lang: string): Promise<'Error' | number> {
